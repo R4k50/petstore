@@ -26,7 +26,7 @@ public class WebConfig
 
     CorsConfiguration config = new CorsConfiguration();
     config.setAllowCredentials(true);
-    config.addAllowedOrigin("http://127.0.0.1:5173");
+    config.addAllowedOrigin("http://127.0.0.1:8080");
 
     config.setAllowedHeaders(Arrays.asList(
         HttpHeaders.AUTHORIZATION,

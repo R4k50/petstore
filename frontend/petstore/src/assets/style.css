@@ -1,3 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Phudu:wght@400;700&display=swap');
+
+body {
+    font-family: 'Phudu', cursive;
+}
+
 .navbar {
     display: flex;
     justify-content: space-between;
@@ -34,4 +40,20 @@
 
 .login-button {
     margin-left: auto;
+    font-family: inherit;
+}
+
+.el-button {
+    background-color: #67C23A;
+    border-color: #67C23A;
+    color: white;
+}
+
+.el-button:hover {
+    background-color: #56A72B;
+    border-color: #56A72B;
+}
+
+.el-button:focus {
+    box-shadow: 0 0 0 0.2rem rgba(103, 194, 58, 0.5);
 }

@@ -1,9 +1,9 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
-import LoginView from '../views/LoginView.vue'
-import AnimalManagementView from '../views/AnimalManagementView.vue'
-import AnimalView from '../views/AnimalView.vue'
-import ProductView from '../views/ProductView.vue'
+import { createRouter, createWebHistory } from 'vue-router';
+import HomeView from '../views/HomeView.vue';
+import LoginView from '../views/LoginView.vue';
+import AnimalView from '../views/AnimalView.vue';
+import ProductView from '../views/ProductView.vue';
+import AdminPanel from '../views/AdminPanel.vue';
 
 const routes = [
   {
@@ -21,24 +21,21 @@ const routes = [
     name: 'animals',
     component: AnimalView,
   },
-  // {
-  //   path: '/animals/:id',
-  //   name: 'animal',
-  //   component: AnimalManagementView,
-  // },
-
   {
     path: '/products',
     name: 'product',
     component: ProductView,
   },
-]
+  {
+    path: '/admin',
+    name: 'admin',
+    component: AdminPanel,
+  },
+];
 
-// Tworzenie instancji routera
 const router = createRouter({
-  history: createWebHashHistory(),
-  routes, // Definiowane trasy
-})
+  history: createWebHistory(),
+  routes,
+});
 
-// Eksportowanie routera
-export default router
+export default router;

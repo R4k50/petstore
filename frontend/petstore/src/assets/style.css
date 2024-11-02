@@ -4,6 +4,12 @@ body {
     font-family: 'Phudu', cursive;
 }
 
+:root {
+    --el-color-primary: #67C23A;
+    --el-color-primary-light-3: #5DA237; 
+    --el-color-primary-dark-2: #4CAF50;  
+  }
+
 .navbar {
     display: flex;
     justify-content: space-between;
@@ -47,6 +53,7 @@ body {
     background-color: #67C23A;
     border-color: #67C23A;
     color: white;
+    font-family: inherit;
 }
 
 .el-button:hover {
@@ -57,3 +64,15 @@ body {
 .el-button:focus {
     box-shadow: 0 0 0 0.2rem rgba(103, 194, 58, 0.5);
 }
+
+.el-pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 1em;
+  }
+
+.close:hover {
+    color: #56A72B;
+}
+
+  

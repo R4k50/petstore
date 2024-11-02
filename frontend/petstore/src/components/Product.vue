@@ -1,46 +1,38 @@
 <template>
-<div v-for="product in products" :key="product.id">
+  <div class="product-container">
     <img :src="getImageUrl(product.img)" alt="Product Image" />
-    <div>
-      {{ product.name }} 
-    </div>
-    <div>
-      ${{ product.price }}
-    </div>
-</div>    
+    <div class="product-name">{{ product.name }}</div>
+    <div class="product-price"><strong>{{ product.price }} PLN</strong></div>
+  </div>    
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from 'vue';
-import axios from 'axios';
-import { toRefs } from 'vue';
+import { ref } from 'vue';
 
-const props = defineProps(['productId']);
-const product = ref({});
-const loading = ref(true);
-const error = ref(null);
+const props = defineProps(['product']);
+const getImageUrl = (imageName) => `/assets/images/${imageName}`;
 </script>
 
 <style scoped>
-h1 {
-  font-size: 2em;
-  color: #333;
-}
-img {
-  max-width: 100px;
-  margin-right: 10px;
-}
-button {
-  margin: 0 5px;
-}
-.center {
-  margin-bottom: 2px;
-  justify-content: center;
+.product-container {
+  display: flex;
+  flex-direction: column;
   align-items: center;
   text-align: center;
 }
-.flex {
-  display: flex;
-  gap: 1em;
+
+img {
+  max-width: 100px;
+  margin-bottom: 15px;
+}
+
+.product-name {
+  margin-bottom: 10px;
+  font-size: 1.2em;
+}
+
+.product-price {
+  margin-bottom: 15px;
+  font-weight: bold;
 }
 </style>

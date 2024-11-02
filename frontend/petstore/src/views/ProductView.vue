@@ -5,17 +5,19 @@
     <div v-if="loading">Loading...</div>
     <div v-else-if="error">{{ error }}</div>
     
-    <div v-else class="product-item">
-      <img :src="getImageUrl(currentProduct.img)" :alt="currentProduct.name" />
-      <h2>{{ currentProduct.name }}</h2>
-      <p><strong>{{ currentProduct.price }} PLN</strong></p>
+    <div v-else class="product-item" v-if="currentProduct">
+      <Product :product="currentProduct" />
       <el-button type="primary" @click="openModal(currentProduct.id)">Zobacz szczegóły</el-button>
     </div>
     
     <div v-if="totalPages > 1" class="pagination">
-      <el-button type="primary" @click="goToPage(currentPage - 1)" :disabled="currentPage === 1">Poprzedni</el-button>
-      <span>Strona {{ currentPage }} z {{ totalPages }}</span>
-      <el-button type="primary" @click="goToPage(currentPage + 1)" :disabled="currentPage === totalPages">Następny</el-button>
+      <el-pagination
+        layout="prev, pager, next"
+        :total="totalElements"
+        :page-size="itemsPerPage"
+        :current-page="currentPage"
+        @current-change="goToPage"
+      />
     </div>
 
     <ProductDetails v-if="showModal" :productId="selectedProductId" @close="closeModal" />
@@ -26,16 +28,18 @@
 import { ref, computed, onMounted } from 'vue';
 import axios from 'axios';
 import ProductDetails from '@/components/ProductDetails.vue';
+import Product from '@/components/Product.vue';
 
 const products = ref([]);
 const loading = ref(true);
 const error = ref(null);
 const currentPage = ref(1);
-const itemsPerPage = ref(1); 
+const itemsPerPage = ref(1);
 const totalPages = ref(0);
+const totalElements = ref(0);
 
-const showModal = ref(false); 
-const selectedProductId = ref(null); 
+const showModal = ref(false);
+const selectedProductId = ref(null);
 
 const fetchData = async (page) => {
   try {
@@ -48,6 +52,7 @@ const fetchData = async (page) => {
     });
     products.value = response.data.content;
     totalPages.value = Math.ceil(response.data.totalElements / itemsPerPage.value);
+    totalElements.value = response.data.totalElements;
     error.value = null;
   } catch (err) {
     error.value = 'Nie udało się załadować produktów';
@@ -56,13 +61,7 @@ const fetchData = async (page) => {
   }
 };
 
-const getImageUrl = (imageName) => {
-  return `/assets/images/${imageName}`;
-};
-
-const currentProduct = computed(() => {
-  return products.value.length ? products.value[0] : null;
-});
+const currentProduct = computed(() => products.value.length ? products.value[0] : null);
 
 const openModal = (productId) => {
   selectedProductId.value = productId;
@@ -87,13 +86,6 @@ h1 {
   font-size: 2em;
   color: #333;
 }
-img {
-  max-width: 100px;
-  margin-bottom: 10px;
-}
-button {
-  margin: 0 5px;
-}
 .center {
   margin-bottom: 2px;
   justify-content: center;
@@ -108,7 +100,5 @@ button {
   margin: auto;
   text-align: center;
 }
-.pagination {
-  margin-top: 1em;
-}
+
 </style>

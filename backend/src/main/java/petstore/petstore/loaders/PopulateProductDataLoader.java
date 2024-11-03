@@ -31,7 +31,7 @@ public class PopulateProductDataLoader implements ApplicationRunner
       .description("My son loves it!")
       .price(new BigDecimal("9.99"))
       .quantity(1)
-      .img("https://zoo24.pl/52570-superlarge_default_2x/pedigree-karma-dla-psa-wolowina-kurczak-puszka-4x400g.jpg")
+      .img("karma1.jpg")
       .build());
 
     createProduct(NewProductDto.builder()
@@ -39,7 +39,7 @@ public class PopulateProductDataLoader implements ApplicationRunner
       .description("My son loves it!")
       .price(new BigDecimal("5.99"))
       .quantity(2)
-      .img("https://zoo24.pl/52570-superlarge_default_2x/pedigree-karma-dla-psa-wolowina-kurczak-puszka-4x400g.jpg")
+      .img("karma1.jpg")
       .build());
 
     createProduct(NewProductDto.builder()
@@ -47,7 +47,7 @@ public class PopulateProductDataLoader implements ApplicationRunner
       .description("My son loves it!")
       .price(new BigDecimal("2.99"))
       .quantity(3)
-      .img("https://zoo24.pl/52570-superlarge_default_2x/pedigree-karma-dla-psa-wolowina-kurczak-puszka-4x400g.jpg")
+      .img("karma1.jpg")
       .build());
   }
 

@@ -38,6 +38,12 @@ public class SecurityConfig
             .requestMatchers(HttpMethod.POST, "/login", "/register").anonymous()
             .requestMatchers(HttpMethod.GET, "/products").permitAll()
             .requestMatchers(HttpMethod.GET, "/product/{id}").permitAll()
+
+            .requestMatchers(HttpMethod.GET, "/image/{name}").permitAll()
+            .requestMatchers(HttpMethod.POST, "/image").permitAll()
+            .requestMatchers(HttpMethod.PATCH, "/image/{name}").permitAll()
+            .requestMatchers(HttpMethod.DELETE, "/image/{name}").permitAll()
+
             .anyRequest().denyAll()
         );
 

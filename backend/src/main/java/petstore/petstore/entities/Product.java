@@ -43,6 +43,5 @@ public class Product
   private int quantity;
 
   @Column(name = "img", nullable = false)
-//  @Size(min = 5, max = 100)
   private String img;
 }

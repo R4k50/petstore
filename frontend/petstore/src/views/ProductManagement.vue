@@ -1,5 +1,5 @@
 <template>
-    <h1>zarządzanie zwierzętami</h1>
+    <h1>zarządzenie produktami</h1>
 </template>
 
 <script setup>

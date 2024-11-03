@@ -1,23 +1,18 @@
 <template>
   <div class="center">
     <h1>Produkty</h1>
-    
+
     <div v-if="loading">Loading...</div>
     <div v-else-if="error">{{ error }}</div>
-    
+
     <div v-else class="product-item" v-if="currentProduct">
       <Product :product="currentProduct" />
       <el-button type="primary" @click="openModal(currentProduct.id)">Zobacz szczegóły</el-button>
     </div>
-    
+
     <div v-if="totalPages > 1" class="pagination">
-      <el-pagination
-        layout="prev, pager, next"
-        :total="totalElements"
-        :page-size="itemsPerPage"
-        :current-page="currentPage"
-        @current-change="goToPage"
-      />
+      <el-pagination layout="prev, pager, next" :total="totalElements" :page-size="itemsPerPage"
+        :current-page="currentPage" @current-change="goToPage" />
     </div>
 
     <ProductDetails v-if="showModal" :productId="selectedProductId" @close="closeModal" />
@@ -86,12 +81,14 @@ h1 {
   font-size: 2em;
   color: #333;
 }
+
 .center {
   margin-bottom: 2px;
   justify-content: center;
   align-items: center;
   text-align: center;
 }
+
 .product-item {
   border: 1px solid #ccc;
   padding: 1em;
@@ -100,5 +97,4 @@ h1 {
   margin: auto;
   text-align: center;
 }
-
 </style>

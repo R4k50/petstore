@@ -1,59 +1,30 @@
 @import url('https://fonts.googleapis.com/css2?family=Phudu:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap');
 
 body {
     font-family: 'Phudu', cursive;
+    position: relative;
+    min-height: 100vh;
+    margin: 0;
+    padding-bottom: 3em;
 }
 
+main {
+    max-width: 1200px;
+    margin-inline: auto;
+}
 :root {
     --el-color-primary: #67C23A;
-    --el-color-primary-light-3: #5DA237; 
-    --el-color-primary-dark-2: #4CAF50;  
-  }
-
-.navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 20px;
-    background-color: #f4f4f4;
-    border-bottom: 1px solid #dcdfe6;
+    --el-color-primary-light-3: #5DA237;
+    --el-color-primary-dark-2: #4CAF50;
 }
 
-.nav-left {
-    display: flex;
-}
-
-.nav-item {
-    margin-right: 20px;
-    text-decoration: none;
-    color: #333;
-}
-
-.nav-center {
-    display: flex;
-    align-items: center;
-}
-
-.logo {
-    height: 40px;
-    margin-right: 10px;
-}
-
-.petstore-name {
-    font-size: 24px;
-    font-weight: bold;
-}
-
-.login-button {
-    margin-left: auto;
-    font-family: inherit;
-}
 
 .el-button {
     background-color: #67C23A;
     border-color: #67C23A;
     color: white;
-    font-family: inherit;
+    font-family: "Quicksand", sans-serif;
 }
 
 .el-button:hover {
@@ -69,10 +40,8 @@ body {
     display: flex;
     justify-content: center;
     margin-top: 1em;
-  }
+}
 
 .close:hover {
     color: #56A72B;
 }
-
-  

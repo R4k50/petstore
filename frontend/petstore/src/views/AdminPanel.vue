@@ -1,13 +1,11 @@
 <template>
-    <div class="admin-panel">
-      <h1>panel administracyjny</h1>
-    </div>
-  </template>
-  
-  <script setup>
+  <div class="admin-panel">
+    <h1>panel administracyjny</h1>
+  </div>
+</template>
 
-  </script>
-  
-  <style scoped>
-  </style>
-  
+<script setup>
+
+</script>
+
+<style scoped></style>

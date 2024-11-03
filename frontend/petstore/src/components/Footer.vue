@@ -9,14 +9,16 @@
 
 <style scoped>
 .footer {
-    position: fixed;
+    position: absolute;
+    width: 100%;
+    height: 3em;
     bottom: 0;
-    left: 0;
-    right: 0;
     background-color: #f4f4f4;
-    padding: 10px 20px;
     text-align: center;
-    border-top: 1px solid #dcdfe6;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
 }
 
 .footer-text {

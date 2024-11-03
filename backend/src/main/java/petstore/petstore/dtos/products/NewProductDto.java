@@ -34,6 +34,5 @@ public class NewProductDto
   private int quantity;
 
   @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-//  @Size(min = 5, max = 100)
   private String img;
 }

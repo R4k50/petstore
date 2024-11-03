@@ -31,6 +31,5 @@ public class PatchProductDto
   @DecimalMin(value = "0", inclusive = true, message = "Quantity must be a non negative number")
   private int quantity;
 
-//  @Size(min = 5, max = 100)
   private String img;
 }

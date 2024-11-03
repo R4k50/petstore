@@ -38,6 +38,5 @@ public class ProductDto
   private int quantity;
 
   @NotEmpty(message = "Image path must not be empty")
-//  @Size(min = 5, max = 100)
   private String img;
 }

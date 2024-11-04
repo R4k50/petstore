@@ -10,7 +10,8 @@
 import { ref } from 'vue';
 
 const props = defineProps(['product']);
-const getImageUrl = (imageName) => `/assets/images/${imageName}`;
+
+const getImageUrl = (imageName) => `api/image/${imageName}`;
 </script>
 
 <style scoped>

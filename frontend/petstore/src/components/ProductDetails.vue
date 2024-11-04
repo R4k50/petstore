@@ -1,7 +1,7 @@
 <template>
   <div class="modal">
     <div class="modal-content">
-      <span class="close" @click="$emit('close')">&times;</span>
+      <Icon icon="mdi:close" class="close" @click="$emit('close')" />
       <div class="modal-body">
         <img :src="getImageUrl(product.img)" alt="Product Image" class="product-image" />
         <div class="product-details">
@@ -11,6 +11,7 @@
             <h1>{{ product.name }}</h1>
             <p>{{ product.description }}</p>
             <p>Cena za sztukę: <strong>{{ product.price }} PLN</strong></p>
+            <p :class="quantityClass">{{ quantityMessage }}</p>
           </div>
         </div>
       </div>
@@ -19,19 +20,21 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from 'vue';
+import { ref, watch, onMounted, computed } from 'vue';
 import axios from 'axios';
-import { toRefs } from 'vue';
+import { Icon } from '@iconify/vue';
 
 const props = defineProps(['productId']);
 const product = ref({});
 const loading = ref(true);
 const error = ref(null);
+const quantity = ref(0);
 
 const fetchProduct = async (id) => {
   try {
     const response = await axios.get(`/api/product/${id}`);
     product.value = response.data;
+    quantity.value = response.data.quantity || 0;
   } catch (err) {
     error.value = 'Failed to load product details';
   } finally {
@@ -40,16 +43,34 @@ const fetchProduct = async (id) => {
 };
 
 const getImageUrl = (imageName) => {
-  return `/assets/images/${imageName}`;
+  return `api/image/${imageName}`;
 };
 
-// Watch for productId changes to fetch new data
+const quantityMessage = computed(() => {
+  if (quantity.value === 0) {
+    return 'Produkt tymczasowo niedostępny.';
+  } else if (quantity.value <= 10) {
+    return 'Ostatnie sztuki!';
+  } else {
+    return 'Produkt dostępny w dużej ilości.';
+  }
+});
+
+const quantityClass = computed(() => {
+  if (quantity.value === 0) {
+    return 'text-red'; 
+  } else if (quantity.value <= 10) {
+    return 'text-orange';
+  } else {
+    return 'text-green'; 
+  }
+});
+
 watch(() => props.productId, (newId) => {
   loading.value = true;
   fetchProduct(newId);
 });
 
-// Initial fetch
 onMounted(() => {
   fetchProduct(props.productId);
 });
@@ -98,11 +119,22 @@ onMounted(() => {
 
 .close {
   position: absolute;
-  top: 0px; 
+  top: 10px; 
   right: 20px; 
-  font-size: 3em; 
+  font-size: 1.8em; 
   color: #333; 
-  font-weight: bold;
+  cursor: pointer;
 }
 
+.text-red {
+  color: #F54444;
+}
+
+.text-orange {
+  color: orange;
+}
+
+.text-green {
+  color: green;
+}
 </style>

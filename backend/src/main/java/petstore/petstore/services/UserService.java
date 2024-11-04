@@ -1,11 +1,13 @@
 package petstore.petstore.services;
 
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import petstore.petstore.dtos.auth.LoginDto;
 import petstore.petstore.dtos.auth.RegisterDto;
 import petstore.petstore.dtos.users.PatchUserDto;
 import petstore.petstore.dtos.users.UserDto;
 import petstore.petstore.entities.User;
 import petstore.petstore.exceptions.AppException;
+import petstore.petstore.exceptions.ExceptionUtils;
 import petstore.petstore.mappers.UserMapper;
 import petstore.petstore.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -89,26 +91,26 @@ public class UserService
         userRepository.delete(user);
     }
 
-    public UserDto login(LoginDto loginDto)
+    public UserDto login(LoginDto loginDto) throws MethodArgumentNotValidException
     {
         User user = userRepository.findByEmail(loginDto.getEmail())
-            .orElseThrow(() -> new AppException("Unknown user", HttpStatus.NOT_FOUND));
+            .orElseThrow(() -> ExceptionUtils.createValidationException("email", "Email does not exist"));
 
         if (!passwordEncoder.matches(loginDto.getPassword(), user.getPassword()))
-            throw new AppException("Invalid password", HttpStatus.BAD_REQUEST);
+            throw ExceptionUtils.createValidationException("password", "Invalid password");
 
         return userMapper.toUserDto(user);
     }
 
-    public UserDto register(RegisterDto registerDto)
+    public UserDto register(RegisterDto registerDto) throws MethodArgumentNotValidException
     {
         Optional<User> existingUser = userRepository.findByEmail(registerDto.getEmail());
 
         if (existingUser.isPresent())
-            throw new AppException("Email already taken", HttpStatus.BAD_REQUEST);
+            throw ExceptionUtils.createValidationException("email", "Email already taken");
 
         if (!registerDto.getPassword().equals(registerDto.getPasswordConfirmation()))
-            throw new AppException("Passwords do not match", HttpStatus.BAD_REQUEST);
+            throw ExceptionUtils.createValidationException("passwordConfirmation", "Passwords do not match");
 
         User user = userMapper.registerToUser(registerDto);
         user.setPassword(passwordEncoder.encode(CharBuffer.wrap(registerDto.getPassword())));

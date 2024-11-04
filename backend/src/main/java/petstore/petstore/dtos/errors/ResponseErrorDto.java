@@ -3,9 +3,11 @@ package petstore.petstore.dtos.errors;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.util.Map;
+
 @AllArgsConstructor
 @Data
-public class ErrorDto
+public class ResponseErrorDto
 {
-  private String error;
+  private Map<String, String> errors;
 }

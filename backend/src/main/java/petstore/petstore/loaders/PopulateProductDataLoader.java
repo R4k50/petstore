@@ -26,29 +26,16 @@ public class PopulateProductDataLoader implements ApplicationRunner
 
   private void populateProducts()
   {
-    createProduct(NewProductDto.builder()
-      .name("Pet food 1")
-      .description("My son loves it!")
-      .price(new BigDecimal("9.99"))
-      .quantity(1)
-      .img("karma1.jpg")
-      .build());
-
-    createProduct(NewProductDto.builder()
-      .name("Pet food 2")
-      .description("My son loves it!")
-      .price(new BigDecimal("5.99"))
-      .quantity(2)
-      .img("karma1.jpg")
-      .build());
-
-    createProduct(NewProductDto.builder()
-      .name("Pet food 3")
-      .description("My son loves it!")
-      .price(new BigDecimal("2.99"))
-      .quantity(3)
-      .img("karma1.jpg")
-      .build());
+    for (int i = 0; i < 100; i++)
+    {
+      createProduct(NewProductDto.builder()
+          .name("Pet food " + (i + 1))
+          .description("My son loves it!")
+          .price(new BigDecimal("9.99"))
+          .quantity(i)
+          .img("karma1.jpg")
+          .build());
+    }
   }
 
   private void createProduct(NewProductDto newProductDto)

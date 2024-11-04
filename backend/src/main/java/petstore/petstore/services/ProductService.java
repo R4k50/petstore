@@ -1,6 +1,7 @@
 package petstore.petstore.services;
 
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Example;
 import petstore.petstore.dtos.products.NewProductDto;
 import petstore.petstore.dtos.products.PatchProductDto;
 import petstore.petstore.dtos.products.ProductDto;
@@ -34,6 +35,13 @@ public class ProductService
   public Page<Product> findAll(Pageable pageable)
   {
     Page<Product> products = productRepository.findAll(pageable);
+
+    return products;
+  }
+
+  public Page<Product> findAll(Example productExample, Pageable pageable)
+  {
+    Page<Product> products = productRepository.findAll(productExample, pageable);
 
     return products;
   }

@@ -1,11 +1,13 @@
 package petstore.petstore.services;
 
+import com.google.common.base.Joiner;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.data.domain.Example;
+import org.springframework.data.jpa.domain.Specification;
 import petstore.petstore.dtos.products.NewProductDto;
 import petstore.petstore.dtos.products.PatchProductDto;
 import petstore.petstore.dtos.products.ProductDto;
 import petstore.petstore.entities.Product;
+import petstore.petstore.enums.SearchOperation;
 import petstore.petstore.exceptions.AppException;
 import petstore.petstore.mappers.ProductMapper;
 import petstore.petstore.repositories.ProductRepository;
@@ -14,8 +16,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import petstore.petstore.specifications.ProductSpecificationsBuilder;
 
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @RequiredArgsConstructor
 @Service
@@ -39,21 +44,32 @@ public class ProductService
     return products;
   }
 
-  public Page<Product> findAll(Example productExample, Pageable pageable)
-  {
-    Page<Product> products = productRepository.findAll(productExample, pageable);
-
-    return products;
-  }
-
   public Page<Product> findAll(Pageable pageable, String search)
   {
-    String[] searchArray = search.split(",");
+    ProductSpecificationsBuilder builder = new ProductSpecificationsBuilder();
 
-    String searchParam = searchArray[0];
-    String searchValue = searchArray[1];
+    String operationSetExper = Joiner.on("|").join(SearchOperation.SIMPLE_OPERATION_SET);
+    Pattern pattern = Pattern.compile(
+        "(\\w+?)(" + operationSetExper + ")(\\p{Punct}?)(\\w+?)(\\p{Punct}?),"
+    );
 
-    Page<Product> products = productRepository.findAll(searchParam, searchValue, pageable);
+    if (search != null)
+    {
+      Matcher matcher = pattern.matcher(search + ",");
+
+      while (matcher.find())
+      {
+        builder.with(
+            matcher.group(1),
+            matcher.group(2),
+            matcher.group(4),
+            matcher.group(3),
+            matcher.group(5));
+      }
+    }
+
+    Specification<Product> productSpecification = builder.build();
+    Page<Product> products = productRepository.findAll(productSpecification, pageable);
 
     return products;
   }

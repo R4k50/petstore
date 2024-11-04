@@ -1,15 +1,22 @@
 <template>
   <div class="home">
     <div class="banner">
-      <img :src="require('@/assets/banerxd.png')" alt="Baner z Kotem" class="banner-image" />
+      <img :src="require('@/assets/banerxd.jpg')" alt="Baner z Kotem" class="banner-image" />
+      <div class="banner-text">
+        <h1 class="banner-title">Witamy w Petstore</h1>
+        <p class="banner-subtext">
+          Oferujemy szeroki wybór produktów dla zwierząt domowych — od najwyższej jakości karmy po stylowe akcesoria.<br>
+          Dbaj o szczęście i zdrowie swojego pupila dzięki naszym specjalnie wyselekcjonowanym produktom.<br>
+          Znajdź najlepsze oferty i odkryj inspiracje, aby zapewnić komfort i radość swoim czworonożnym przyjaciołom.
+        </p>
+      </div>
     </div>
-
 
     <div class="content-container">
       <div class="carousel">
         <el-carousel :interval="5000" arrow="always" class="carousel-container">
-          <el-carousel-item v-for="index in 4" :key="index">
-            <img :src="require('@/assets/kot.avif')" alt="Kot" class="carousel-image" />
+          <el-carousel-item v-for="(img, index) in catImages" :key="index">
+            <img :src="require(`@/assets/${img}`)" :alt="`Kot ${index + 1}`" class="carousel-image" />
           </el-carousel-item>
         </el-carousel>
       </div>
@@ -21,30 +28,29 @@
         </p>
         <div class="button-container">
           <router-link to="/animals">
-    <el-button type="primary">Zobacz ofertę zwierząt ></el-button>
-  </router-link>
+            <el-button type="primary">Zobacz ofertę zwierząt ></el-button>
+          </router-link>
         </div>
       </div>
     </div>
 
-
     <div class="content-container">
       <div class="text-content reverse-layout">
-        <h2 class="box-title" style="">Wyborna karma</h2>
+        <h2 class="box-title">Wyborna karma</h2>
         <p class="box-text">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed accumsan velit leo, tempor posuere dolor porttitor nec. Proin auctor orci et velit ultrices eleifend. Duis cursus egestas justo, sit amet consectetur ligula malesuada non.
         </p>
         <div class="button-container">
           <router-link to="/products">
-    <el-button type="primary">Zobacz ofertę produktów ></el-button>
-  </router-link>
+            <el-button type="primary">Zobacz ofertę produktów ></el-button>
+          </router-link>
         </div>
       </div>
 
       <div class="carousel">
         <el-carousel :interval="5000" arrow="always" class="carousel-container">
-          <el-carousel-item v-for="index in 4" :key="index">
-            <img :src="require('@/assets/kot.avif')" alt="Kot" class="carousel-image" />
+          <el-carousel-item v-for="(img, index) in foodImages" :key="index">
+            <img :src="require(`@/assets/${img}`)" :alt="`Karma ${index + 1}`" class="carousel-image" />
           </el-carousel-item>
         </el-carousel>
       </div>
@@ -53,6 +59,19 @@
 </template>
 
 <script setup>
+const catImages = [
+  'kot.avif',
+  'img4.jpg',
+  'img5.jpg',
+  'img6.jpg'
+];
+
+const foodImages = [
+  'img1.jpg',
+  'img2.jpg',
+  'img3.jpg',
+  'img7.jpg'
+];
 </script>
 
 <style scoped>
@@ -67,8 +86,9 @@
 }
 
 .banner {
+  position: relative;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   overflow: hidden;
   width: 100%;
 }
@@ -80,16 +100,38 @@
   object-fit: cover;
 }
 
+.banner-text {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 50%;
+  color: black;
+  text-align: left;
+}
+
+.banner-title {
+  margin: 0;
+  color: var(--el-color-primary);
+  font-size: 48px;
+}
+
+.banner-subtext {
+  margin: 5px 0 0;
+  font-size: 24px;
+  font-family: "Quicksand", sans-serif;
+  color: black;
+}
+
 .content-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 .carousel {
   flex: 1;
-  /* margin: 0 20px; */
 }
 
 .carousel-container {
@@ -123,16 +165,16 @@
   font-family: "Quicksand", sans-serif;
 }
 
-.reverse-layout{
+.reverse-layout {
   text-align: right;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   justify-content: center;
 }
+
 .button-container {
   display: flex;
   justify-content: flex-start;
 }
 </style>
-

@@ -1,6 +1,8 @@
 <template>
     <footer class="footer">
-        <p class="footer-text">Przykładowa treść stopy</p>
+      <div class="footer-content">
+        <p class="footer-text">© 2024 Petstore.</p>
+      </div>
     </footer>
 </template>
 

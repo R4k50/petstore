@@ -10,7 +10,7 @@
           <div v-else>
             <h1>{{ product.name }}</h1>
             <p>{{ product.description }}</p>
-            <p>Cena za sztukę: <strong>{{ product.price }} PLN</strong></p>
+            <h2><strong>{{ product.price }} PLN</strong></h2>
             <p :class="quantityClass">{{ quantityMessage }}</p>
           </div>
         </div>
@@ -77,6 +77,15 @@ onMounted(() => {
 </script>
 
 <style scoped>
+h1 {
+  font-size: 2em;
+  color: #56A72B;
+}
+
+h2 {
+  margin-top: 40px;
+}
+
 .modal {
   position: fixed;
   top: 0;
@@ -93,28 +102,31 @@ onMounted(() => {
   background-color: white;
   padding: 20px;
   border-radius: 8px;
-  max-width: 800px; 
-  width: 100%;
+  width: 45%;
   position: relative;
 }
 
 .modal-body {
-  display: flex; 
-  align-items: center; 
+  display: flex;
+  align-items: flex-start;
 }
 
 .product-image {
-  max-width: 300px; 
-  margin-right: 20px; 
+  max-width: 300px;
+  margin-right: 20px;
 }
 
 .product-details {
-  flex-grow: 1; 
+  flex-grow: 1;
   margin-left: 5px;
-  text-align: left; 
+  text-align: left;
   display: flex;
-  flex-direction: column; 
-  justify-content: center; 
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+p {
+  font-family: "Quicksand", sans-serif;
 }
 
 .close {

@@ -5,9 +5,7 @@
       <div class="banner-text">
         <h1 class="banner-title">Witamy w Petstore</h1>
         <p class="banner-subtext">
-          Oferujemy szeroki wybór produktów dla zwierząt domowych — od najwyższej jakości karmy po stylowe akcesoria.<br>
-          Dbaj o szczęście i zdrowie swojego pupila dzięki naszym specjalnie wyselekcjonowanym produktom.<br>
-          Znajdź najlepsze oferty i odkryj inspiracje, aby zapewnić komfort i radość swoim czworonożnym przyjaciołom.
+          Oferujemy szeroki wybór produktów dla zwierząt domowych — od najwyższej jakości karmy po stylowe akcesoria.
         </p>
       </div>
     </div>
@@ -107,6 +105,8 @@ const foodImages = [
   width: 50%;
   color: black;
   text-align: left;
+  margin-left: 20px;
+  margin-top: 40px;
 }
 
 .banner-title {
@@ -126,8 +126,8 @@ const foodImages = [
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 20px;
-  margin-bottom: 20px;
+  margin-top: 50px;
+  margin-bottom: 50px;
 }
 
 .carousel {
@@ -163,6 +163,8 @@ const foodImages = [
 .box-text {
   margin: 0;
   font-family: "Quicksand", sans-serif;
+  font-size: 20px;
+  margin-bottom: 20px;
 }
 
 .reverse-layout {

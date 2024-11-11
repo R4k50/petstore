@@ -21,6 +21,7 @@ export const useAuthStore = defineStore({
                 });
                 user = await response.data;
             } catch (err) {
+                throw err;
 
             }
 
@@ -31,6 +32,20 @@ export const useAuthStore = defineStore({
         logout() {
             this.user = null;
             localStorage.removeItem('user');
+
+        },
+        async register(email, password, name, surname, passwordConfirmation) {
+            try {
+                await axios.post('http://localhost:8000/register', {
+                    email,
+                    password,
+                    name,
+                    surname,
+                    passwordConfirmation
+                });
+            } catch (err) {
+                throw err;
+            }
 
         }
     }

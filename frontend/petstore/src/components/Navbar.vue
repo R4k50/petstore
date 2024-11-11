@@ -2,14 +2,20 @@
     <nav class="navbar">
         <div class="container">
             <div class="nav-center">
-                <img src="../assets/logo.png" alt="Logo" class="logo" />
-                <span class="petstore-name">Petstore</span>
+                <router-link to="/" class="logo-link">
+                    <img src="../assets/logo.png" alt="Logo" class="logo" />
+                    <span class="petstore-name">Petstore</span>
+                </router-link>
             </div>
 
             <div class="nav-left">
-                <router-link to="/" class="nav-item" style="color:#67C23A">Strona główna</router-link>
-                <router-link to="/animals" class="nav-item">Zwierzęta</router-link>
-                <router-link to="/products" class="nav-item">Produkty</router-link>
+                <router-link to="/" class="nav-item" active-class="active-link">Strona główna</router-link>
+                <router-link to="/animals" class="nav-item" active-class="active-link">Zwierzęta</router-link>
+                <router-link to="/products" class="nav-item" active-class="active-link">Produkty</router-link>
+
+                <div v-if="user">
+                    <router-link to="/admin" class="nav-item" active-class="active-link">Panel administracyjny</router-link>
+                </div>
             </div>
 
             <div v-if="user == null">
@@ -27,7 +33,6 @@
 
 <script setup>
 import { useAuthStore } from '@/stores/auth.store';
-import { ElContainer } from 'element-plus';
 import { storeToRefs } from 'pinia';
 import { useRouter } from 'vue-router';
 
@@ -65,9 +70,19 @@ const handleLogout = () => {
     color: #333;
 }
 
+.nav-item:hover {
+    color: #67C23A;
+}
+
 .nav-center {
     display: flex;
     align-items: center;
+}
+
+.logo-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none; /* Usuwamy podkreślenie linku */
 }
 
 .logo {
@@ -78,10 +93,16 @@ const handleLogout = () => {
 .petstore-name {
     font-size: 24px;
     font-weight: bold;
+    color: #333;
 }
 
 .login-button {
     margin-left: auto;
     font-family: "Quicksand", sans-serif;
+}
+
+.active-link {
+    color: #67C23A;
+    font-weight: bold;
 }
 </style>

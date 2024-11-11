@@ -2,26 +2,28 @@
     <div class="login-container">
         <h2 class="login-title">Logowanie</h2>
         <el-form @submit.native.prevent="handleLogin" :model="form" ref="loginForm" label-position="top">
-            <el-form-item label="Email" prop="email">
+            <el-form-item label="Email" prop="email" :error="error?.email" :show-message="error?.email ? true : false">
                 <el-input v-model="form.email" class="login-input" placeholder="Podaj email" />
             </el-form-item>
-            <el-form-item label="Hasło" prop="password">
+            <el-form-item label="Hasło" prop="password" :error="error?.password"
+                :show-message="error?.password ? true : false">
                 <el-input v-model="form.password" class="login-input" type="password" placeholder="Podaj hasło"
                     show-password />
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" native-type="submit" class="login-button">Zaloguj się</el-button>
+                <el-button type="primary" native-type="submit" class="login-button" :disabled="loading"
+                    :class="{ 'is-loading': loading }">
+                    Zaloguj się
+                </el-button>
+            </el-form-item>
+            <el-form-item>
+                <router-link to="/" class="login-button">
+                    <el-button type="default" class="cancel-button">Anuluj</el-button>
+                </router-link>
             </el-form-item>
         </el-form>
 
         <div v-if="loading" class="loading-indicator">Ładowanie...</div>
-        <div v-else-if="error" class="error-message">{{ error }}</div>
-        <ul v-else-if="userdata" class="user-info">
-            <li>Email: {{ userdata.email }}</li>
-            <li>Imię: {{ userdata.name }}</li>
-            <li>Nazwisko: {{ userdata.surname }}</li>
-            <li>Token: {{ userdata.token }}</li>
-        </ul>
     </div>
 </template>
 
@@ -49,8 +51,7 @@ const handleLogin = async () => {
         userdata.value = authStore.user;
         router.push('/admin');
     } catch (err) {
-        error.value = 'Błąd podczas logowania!';
-        console.log(err);
+        error.value = err.response.data.errors;
     } finally {
         loading.value = false;
     }
@@ -82,20 +83,28 @@ const handleLogin = async () => {
     width: 100%;
 }
 
+.login-button.is-loading {
+    background-color: #ccc;
+    border-color: #ccc;
+    cursor: not-allowed;
+}
+
+.cancel-button {
+    width: 100%;
+    color: #4caf50;
+    border: 1px solid #4caf50;
+    background-color: transparent;
+    font-weight: 600;
+}
+
+.cancel-button:hover {
+    background-color: #e8f5e9;
+    color: #4caf50;
+    border-color: #4caf50;
+}
+
 .loading-indicator {
     text-align: center;
     margin-top: 15px;
-}
-
-.error-message {
-    color: red;
-    text-align: center;
-    margin-top: 15px;
-}
-
-.user-info {
-    margin-top: 15px;
-    list-style-type: none;
-    padding: 0;
 }
 </style>

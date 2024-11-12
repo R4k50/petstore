@@ -104,6 +104,7 @@ import { Icon } from '@iconify/vue';
 
 .el-button {
   font-family: "Quicksand", sans-serif;
+  outline: none;
 }
 
 .el-button .iconify {

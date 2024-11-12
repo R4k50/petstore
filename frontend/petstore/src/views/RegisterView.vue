@@ -1,23 +1,30 @@
 <template>
     <div class="register-container">
         <h2 class="register-title">Dodawanie użytkownika</h2>
+
+
         <el-form @submit.native.prevent="handleRegister" :model="form" ref="registerForm" label-position="top">
-            <el-form-item label="Email" prop="email" :error="error?.email" :show-message="error?.email ? true : false">
+            <el-form-item label="Email" prop="email" :error="error?.email" :show-message="error?.email ? true : false"
+                class="register-form-item">
                 <el-input v-model="form.email" class="register-input" placeholder="Podaj email" />
             </el-form-item>
-            <el-form-item label="Imie" prop="imie" :error="error?.name" :show-message="error?.name ? true : false">
+            <el-form-item label="Imie" prop="imie" :error="error?.name" :show-message="error?.name ? true : false"
+                class="register-form-item">
                 <el-input v-model="form.name" class="register-input" placeholder="Podaj imię" />
             </el-form-item>
-            <el-form-item label="Nazwisko" prop="nazwisko" :error="error?.surname" :show-message="error?.surname ? true : false">
+            <el-form-item label="Nazwisko" prop="nazwisko" :error="error?.surname"
+                :show-message="error?.surname ? true : false" class="register-form-item">
                 <el-input v-model="form.surname" class="register-input" placeholder="Podaj nazwisko" />
             </el-form-item>
-            <el-form-item label="Hasło" prop="password" :error="error?.password" :show-message="error?.password ? true : false">
+            <el-form-item label="Hasło" prop="password" :error="error?.password"
+                :show-message="error?.password ? true : false" class="register-form-item">
                 <el-input v-model="form.password" class="register-input" type="password" placeholder="Podaj hasło"
                     show-password />
             </el-form-item>
-            <el-form-item label="Potwierdź hasło" prop="passwordConfirmation" :error="error?.passwordConfirmation" :show-message="error?.passwordConfirmation ? true : false">
-                <el-input v-model="form.passwordConfirmation" class="register-input" type="password" placeholder="Potwierdź hasło"
-                    show-password />
+            <el-form-item label="Potwierdź hasło" prop="passwordConfirmation" :error="error?.passwordConfirmation"
+                :show-message="error?.passwordConfirmation ? true : false" class="register-form-item">
+                <el-input v-model="form.passwordConfirmation" class="register-input" type="password"
+                    placeholder="Potwierdź hasło" show-password />
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" native-type="submit" class="register-button">Dodaj</el-button>
@@ -37,6 +44,7 @@
 import { ref } from 'vue';
 import { useAuthStore } from '@/stores/auth.store';
 import { useRouter } from 'vue-router';
+import { ElMessage } from 'element-plus'
 
 const router = useRouter();
 const authStore = useAuthStore();
@@ -50,6 +58,12 @@ const form = ref({
 const loading = ref(false);
 const error = ref(null);
 const userdata = ref(null);
+const success = () => {
+  ElMessage({
+    message: 'Pomyślnie dodano użytkownika',
+    type: 'success',
+  })
+}
 
 const handleRegister = async () => {
     loading.value = true;
@@ -58,6 +72,12 @@ const handleRegister = async () => {
     try {
         await authStore.register(form.value.email, form.value.password, form.value.name, form.value.surname, form.value.passwordConfirmation);
         userdata.value = authStore.user;
+        success();
+        form.value.email = "";
+        form.value.password = "";
+        form.value.name = '';
+        form.value.surname = '';
+        form.value.passwordConfirmation = '';
     } catch (err) {
         error.value = err.response.data.errors;
     } finally {
@@ -84,7 +104,6 @@ const handleRegister = async () => {
 
 .register-input {
     width: 100%;
-    margin-bottom: 15px;
 }
 
 .register-button {
@@ -126,4 +145,9 @@ const handleRegister = async () => {
     text-align: center;
     margin-top: 15px;
 }
-</style> 
+
+
+.register-form-item {
+    margin-bottom: 30px;
+}
+</style>

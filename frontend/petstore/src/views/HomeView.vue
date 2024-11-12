@@ -11,6 +11,8 @@
     </div>
 
     <div class="content-container">
+      <div class="paw-watermark paw-watermark-first"></div>
+
       <div class="carousel">
         <el-carousel :interval="5000" arrow="always" class="carousel-container">
           <el-carousel-item v-for="(img, index) in catImages" :key="index">
@@ -33,6 +35,8 @@
     </div>
 
     <div class="content-container">
+      <div class="paw-watermark paw-watermark-second"></div>
+
       <div class="text-content reverse-layout">
         <h2 class="box-title">Wyborna karma</h2>
         <p class="box-text">
@@ -55,6 +59,10 @@
     </div>
   </div>
 </template>
+
+
+
+
 
 <script setup>
 const catImages = [
@@ -123,6 +131,7 @@ const foodImages = [
 }
 
 .content-container {
+  position: relative;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -179,4 +188,28 @@ const foodImages = [
   display: flex;
   justify-content: flex-start;
 }
+
+.paw-watermark {
+  position: absolute;
+  background-image: url("https://api.iconify.design/mdi:paw.svg?color=%2367C23A");
+  background-size: contain;
+  background-repeat: no-repeat;
+  opacity: 0.2;
+  width: 250px;
+  height: 250px;
+  z-index: -1;
+}
+
+.paw-watermark-first {
+  top: 1%;
+  left: 60%;
+  transform: rotate(-30deg);
+}
+
+.paw-watermark-second {
+  top: 54%;
+  left: 35%;
+  transform: translate(-50%, -50%) rotate(30deg);
+}
 </style>
+

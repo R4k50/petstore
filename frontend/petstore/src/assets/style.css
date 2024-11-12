@@ -45,3 +45,10 @@ main {
 .close:hover {
     color: #56A72B;
 }
+
+.el-divider--vertical{
+    display: none;
+}
+.el-page-header__title{
+    display: none;
+}

@@ -8,7 +8,7 @@
     <div v-else-if="error">{{ error }}</div>
 
     <div v-else-if="products.length === 0">
-      <el-empty description="Brak produktów spełniających kryteria wyszukiwania" />
+      <el-empty description="Brak produktów spełniających kryteria wyszukiwania." />
     </div>
 
     <div v-else class="product-list">
@@ -38,7 +38,6 @@ import axios from 'axios';
 import ProductDetails from '@/components/ProductDetails.vue';
 import Product from '@/components/Product.vue';
 import ProductFilter from '@/components/ProductFilter.vue';
-import { ElEmpty } from 'element-plus';
 
 const products = ref([]);
 const loading = ref(true);
@@ -57,10 +56,12 @@ const filters = ref({
   maxQuantity: null,
   minPrice: null,
   maxPrice: null,
+  sortByPrice: null, 
 });
 
 const buildSearchQuery = () => {
   const queries = [];
+
   if (filters.value.name) {
     queries.push(`name:*${filters.value.name}*`);
   }
@@ -87,13 +88,17 @@ const buildSearchQuery = () => {
 const fetchData = async (page) => {
   try {
     loading.value = true;
-    const searchQuery = buildSearchQuery(); 
+    const searchQuery = buildSearchQuery();
     
+    const sortOrder = filters.value.sortByPrice === 'priceAsc' ? 'price,asc' : 
+                      filters.value.sortByPrice === 'priceDesc' ? 'price,desc' : 
+                      'id,asc';
+
     const response = await axios.get('/api/products', {
       params: {
         page: page - 1,
         size: itemsPerPage.value,
-        sort: 'id,asc', 
+        sort: sortOrder,
         search: searchQuery,
       },
     });

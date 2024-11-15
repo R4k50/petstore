@@ -26,7 +26,7 @@
           v-model="priceRange"
           range
           :min="0"
-          :max="500"
+          :max="100"
           step="1"
           @change="updatePriceFilter"
           class="price-slider"
@@ -86,7 +86,7 @@ const applyFilters = () => {
 
 const clearFilters = () => {
   filters.value = { name: '', maxQuantity: null, minPrice: null, maxPrice: null, sortByPrice: null };
-  priceRange.value = [0, 1000];
+  priceRange.value = [0, 500];
   applyFilters();
 };
 

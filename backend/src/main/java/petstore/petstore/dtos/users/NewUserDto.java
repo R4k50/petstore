@@ -14,20 +14,20 @@ import lombok.NoArgsConstructor;
 @Builder
 public class NewUserDto
 {
-    @NotEmpty(message = "Name must not be empty")
-    @Size(min = 2, max = 50, message = "Name must be between 2 and 50 characters")
+    @NotEmpty(message = "Imię nie może być puste")
+    @Size(min = 2, max = 50, message = "Imię musi mieć od 2 do 50 znaków")
     private String name;
 
-    @NotEmpty(message = "Surname must not be empty")
-    @Size(min = 2, max = 50, message = "Surname must be between 2 and 50 characters")
+    @NotEmpty(message = "Nazwisko nie może być puste")
+    @Size(min = 2, max = 50, message = "Nazwisko musi mieć od 2 do 50 znaków")
     private String surname;
 
-    @NotEmpty(message = "Email must not be empty")
-    @Size(min = 2, max = 50, message = "Email must be between 2 and 50 characters")
-    @Email(message = "Invalid email")
+    @NotEmpty(message = "Email nie może być pusty")
+    @Size(min = 2, max = 50, message = "Email musi mieć od 2 do 50 znaków")
+    @Email(message = "Nieprawidłowy email")
     private String email;
 
-    @NotEmpty(message = "Password must not be empty")
-    @Size(min = 8, max = 100, message = "Password must be between 8 and 100 characters")
+    @NotEmpty(message = "Hasło nie może być puste")
+    @Size(min = 8, max = 100, message = "Hasło musi mieć od 8 do 100 znaków")
     private String password;
 }

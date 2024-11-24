@@ -16,20 +16,20 @@ import java.util.Set;
 @Builder
 public class PatchProductDto
 {
-  @Size(min = 2, max = 50, message = "Name must be between 2 and 50 characters")
+  @Size(min = 2, max = 50, message = "Nazwa musi mieć od 2 do 50 znaków")
   private String name;
 
-  @Size(min = 2, max = 1000, message = "Description must be between 2 and 1000 characters long")
+  @Size(min = 2, max = 1000, message = "Opis musi mieć od 2 do 1000 znaków")
   private String description;
 
-  @DecimalMin(value = "0.00", inclusive = true, message = "Price must be a non negative number")
-  @DecimalMax(value = "999.99", inclusive = true, message = "Price must be at most 999.99")
-  @Digits(integer = 3, fraction = 2, message = "Price must have exactly two decimal places")
+  @DecimalMin(value = "0.00", inclusive = true, message = "Cena musi być liczbą nieujemną")
+  @DecimalMax(value = "999.99", inclusive = true, message = "Cena może wynosić maksymalnie 999.99")
+  @Digits(integer = 3, fraction = 2, message = "Cena musi mieć dokładnie dwie cyfry po przecinku")
   private BigDecimal price;
 
   private Set<ProductCategory> categories;
 
-  @DecimalMin(value = "0", inclusive = true, message = "Quantity must be a non negative number")
+  @DecimalMin(value = "0", inclusive = true, message = "Ilość musi być liczbą nieujemną")
   private int quantity;
 
   private String img;

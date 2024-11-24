@@ -32,7 +32,7 @@ public class ProductService
   public ProductDto findById(Long id)
   {
     Product product = productRepository.findById(id)
-        .orElseThrow(() -> new AppException("Unknown product", HttpStatus.NOT_FOUND));
+        .orElseThrow(() -> new AppException("Nieznany produkt", HttpStatus.NOT_FOUND));
 
     return productMapper.toProductDto(product);
   }
@@ -86,7 +86,7 @@ public class ProductService
   public ProductDto update(PatchProductDto patchProductDto, Long id)
   {
     Product product = productRepository.findById(id)
-        .orElseThrow(() -> new AppException("Unknown product", HttpStatus.NOT_FOUND));
+        .orElseThrow(() -> new AppException("Nieznany produkt", HttpStatus.NOT_FOUND));
 
     productMapper.update(product, patchProductDto);
     Product updatedProduct = productRepository.save(product);
@@ -97,7 +97,7 @@ public class ProductService
   public ProductDto update(PatchProductDto patchProductDto, String img, Long id)
   {
     Product product = productRepository.findById(id)
-        .orElseThrow(() -> new AppException("Unknown product", HttpStatus.NOT_FOUND));
+        .orElseThrow(() -> new AppException("Nieznany produkt", HttpStatus.NOT_FOUND));
 
     productMapper.update(product, patchProductDto);
     product.setImg(img);
@@ -110,14 +110,14 @@ public class ProductService
   public Product delete(Long id)
   {
     Product product = productRepository.findById(id)
-        .orElseThrow(() -> new AppException("Unknown product", HttpStatus.NOT_FOUND));
+        .orElseThrow(() -> new AppException("Nieznany produkt", HttpStatus.NOT_FOUND));
 
     try {
       productRepository.delete(product);
     }
     catch (DataIntegrityViolationException ex)
     {
-      throw new AppException("Cannot delete the product, this product is ordered", HttpStatus.BAD_REQUEST);
+      throw new AppException("Nie można usunąć produktu", HttpStatus.BAD_REQUEST);
     }
 
     return product;

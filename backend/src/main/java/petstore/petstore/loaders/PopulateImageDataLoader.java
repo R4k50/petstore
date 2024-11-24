@@ -12,8 +12,6 @@ import petstore.petstore.repositories.ImageRepository;
 import petstore.petstore.services.ImageService;
 
 import java.util.Optional;
-import java.util.zip.Deflater;
-import java.util.zip.Inflater;
 import java.io.IOException;
 import java.io.InputStream;
 

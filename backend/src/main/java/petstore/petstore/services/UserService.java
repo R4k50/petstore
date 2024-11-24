@@ -33,7 +33,7 @@ public class UserService
     public UserDto findById(Long id)
     {
         User user = userRepository.findById(id)
-            .orElseThrow(() -> new AppException("Unknown user", HttpStatus.NOT_FOUND));
+            .orElseThrow(() -> new AppException("Nieznany użytkownik", HttpStatus.NOT_FOUND));
 
         return userMapper.toUserDto(user);
     }
@@ -61,14 +61,14 @@ public class UserService
     public UserDto update(PatchUserDto patchUserDto, Long id)
     {
         User user = userRepository.findById(id)
-            .orElseThrow(() -> new AppException("Unknown user", HttpStatus.NOT_FOUND));
+            .orElseThrow(() -> new AppException("Nieznany użytkownik", HttpStatus.NOT_FOUND));
 
         if (patchUserDto.getEmail() != null && !patchUserDto.getEmail().isEmpty())
         {
             Optional<User> existingUser = userRepository.findByEmail(patchUserDto.getEmail());
 
             if (existingUser.isPresent())
-                throw new AppException("Email already taken", HttpStatus.BAD_REQUEST);
+                throw new AppException("Adres email jest już zajęty", HttpStatus.BAD_REQUEST);
         }
 
         if (patchUserDto.getPassword() != null && !patchUserDto.getPassword().isEmpty())
@@ -86,7 +86,7 @@ public class UserService
     public void delete(Long id)
     {
         User user = userRepository.findById(id)
-            .orElseThrow(() -> new AppException("Unknown user", HttpStatus.NOT_FOUND));
+            .orElseThrow(() -> new AppException("Nieznany użytkownik", HttpStatus.NOT_FOUND));
 
         userRepository.delete(user);
     }
@@ -94,10 +94,10 @@ public class UserService
     public UserDto login(LoginDto loginDto) throws MethodArgumentNotValidException
     {
         User user = userRepository.findByEmail(loginDto.getEmail())
-            .orElseThrow(() -> ExceptionUtils.createValidationException("email", "Email does not exist"));
+            .orElseThrow(() -> ExceptionUtils.createValidationException("email", "Adres email nie istnieje"));
 
         if (!passwordEncoder.matches(loginDto.getPassword(), user.getPassword()))
-            throw ExceptionUtils.createValidationException("password", "Invalid password");
+            throw ExceptionUtils.createValidationException("password", "Nieprawidłowe hasło");
 
         return userMapper.toUserDto(user);
     }
@@ -107,10 +107,10 @@ public class UserService
         Optional<User> existingUser = userRepository.findByEmail(registerDto.getEmail());
 
         if (existingUser.isPresent())
-            throw ExceptionUtils.createValidationException("email", "Email already taken");
+            throw ExceptionUtils.createValidationException("email", "Adres email jest już zajęty");
 
         if (!registerDto.getPassword().equals(registerDto.getPasswordConfirmation()))
-            throw ExceptionUtils.createValidationException("passwordConfirmation", "Passwords do not match");
+            throw ExceptionUtils.createValidationException("passwordConfirmation", "Hasła nie pasują do siebie");
 
         User user = userMapper.registerToUser(registerDto);
         user.setPassword(passwordEncoder.encode(CharBuffer.wrap(registerDto.getPassword())));
@@ -123,7 +123,7 @@ public class UserService
     public User findByEmail(String email)
     {
         User user = userRepository.findByEmail(email)
-            .orElseThrow(() -> new AppException("Unknown user", HttpStatus.NOT_FOUND));
+            .orElseThrow(() -> new AppException("Nieznany użytkownik", HttpStatus.NOT_FOUND));
 
         return user;
     }

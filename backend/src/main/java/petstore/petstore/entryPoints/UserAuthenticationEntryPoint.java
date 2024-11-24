@@ -27,6 +27,6 @@ public class UserAuthenticationEntryPoint implements AuthenticationEntryPoint
     {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
-        OBJECT_MAPPER.writeValue(response.getOutputStream(), new ErrorDto("Unauthorized path"));
+        OBJECT_MAPPER.writeValue(response.getOutputStream(), new ErrorDto("Ścieżka nieautoryzowana"));
     }
 }

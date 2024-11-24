@@ -14,23 +14,23 @@ import lombok.NoArgsConstructor;
 @Builder
 public class RegisterDto
 {
-    @NotEmpty(message = "Name is required")
-    @Size(min = 2, max = 50, message = "Name must be between 2 and 50 characters")
+    @NotEmpty(message = "Imię jest wymagane")
+    @Size(min = 2, max = 50, message = "Imię musi mieć od 2 do 50 znaków")
     private String name;
 
-    @NotEmpty(message = "Surname is required")
-    @Size(min = 2, max = 50, message = "Surname must be between 2 and 50 characters")
+    @NotEmpty(message = "Nazwisko jest wymagane")
+    @Size(min = 2, max = 50, message = "Nazwisko musi mieć od 2 do 50 znaków")
     private String surname;
 
-    @NotEmpty(message = "Email is required")
-    @Size(min = 2, max = 50, message = "Email must be between 2 and 50 characters")
-    @Email(message = "Invalid email")
+    @NotEmpty(message = "Adres email jest wymagany")
+    @Size(min = 2, max = 50, message = "Email musi mieć od 2 do 50 znaków")
+    @Email(message = "Nieprawidłowy email")
     private String email;
 
-    @NotEmpty(message = "Password is required")
-    @Size(min = 8, max = 100, message = "Password must be between 8 and 100 characters")
+    @NotEmpty(message = "Hasło jest wymagane")
+    @Size(min = 8, max = 100, message = "Hasło musi mieć od 8 do 100 znaków")
     private String password;
 
-    @NotEmpty(message = "Password confirmation is required")
+    @NotEmpty(message = "Potwierdzenie hasła jest wymagane")
     private String passwordConfirmation;
 }

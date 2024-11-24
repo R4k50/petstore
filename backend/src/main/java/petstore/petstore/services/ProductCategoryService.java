@@ -23,7 +23,7 @@ public class ProductCategoryService
   public ProductCategoryDto findById(Long id)
   {
     ProductCategory productCategory = productCategoryRepository.findById(id)
-        .orElseThrow(() -> new AppException("Unknown category", HttpStatus.NOT_FOUND));
+        .orElseThrow(() -> new AppException("Nieznana kategoria", HttpStatus.NOT_FOUND));
 
     return productCategoryMapper.toProductCategoryDto(productCategory);
   }
@@ -45,7 +45,7 @@ public class ProductCategoryService
   public ProductCategoryDto update(PatchProductCategoryDto patchProductCategoryDto, Long id)
   {
     ProductCategory productCategory = productCategoryRepository.findById(id)
-        .orElseThrow(() -> new AppException("Unknown category", HttpStatus.NOT_FOUND));
+        .orElseThrow(() -> new AppException("Nieznana kategoria", HttpStatus.NOT_FOUND));
 
     productCategoryMapper.update(productCategory, patchProductCategoryDto);
     ProductCategory updatedCategory = productCategoryRepository.save(productCategory);
@@ -56,7 +56,7 @@ public class ProductCategoryService
   public void delete(Long id)
   {
     ProductCategory productCategory = productCategoryRepository.findById(id)
-        .orElseThrow(() -> new AppException("Unknown category", HttpStatus.NOT_FOUND));
+        .orElseThrow(() -> new AppException("Nieznana kategoria", HttpStatus.NOT_FOUND));
 
     productCategoryRepository.delete(productCategory);
   }

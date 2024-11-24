@@ -75,7 +75,7 @@ public class ImageService
   public void delete(String name)
   {
     Image image = imageRepository.findByName(name)
-        .orElseThrow(() -> new AppException("Unknown image", HttpStatus.NOT_FOUND));
+        .orElseThrow(() -> new AppException("Nieznany obraz", HttpStatus.NOT_FOUND));
 
     imageRepository.delete(image);
   }

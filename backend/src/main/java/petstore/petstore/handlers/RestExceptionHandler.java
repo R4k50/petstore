@@ -70,7 +70,7 @@ public class RestExceptionHandler
     String fieldName = ex.getRequestPartName();
     fieldName = Character.toUpperCase(fieldName.charAt(0)) + fieldName.substring(1);
 
-    Map<String, String> errors = Map.of(ex.getRequestPartName(), fieldName + " is required");
+    Map<String, String> errors = Map.of(ex.getRequestPartName(), "Pole " + fieldName + " jest wymagane");
 
     return ResponseEntity
         .status(HttpStatus.BAD_REQUEST)
@@ -82,7 +82,7 @@ public class RestExceptionHandler
   {
     String field = "object";
     String fieldName;
-    String errorMessage = "is invalid";
+    String errorMessage = "jest niepoprawny";
 
     if (ex.getMostSpecificCause() instanceof InvalidFormatException)
     {
@@ -92,7 +92,7 @@ public class RestExceptionHandler
         .findFirst()
         .orElse(field);
 
-      errorMessage = "format is invalid";
+      errorMessage = "Formatowanie jest niepoprawne";
     }
 
     fieldName = Character.toUpperCase(field.charAt(0)) + field.substring(1);
@@ -107,7 +107,7 @@ public class RestExceptionHandler
   public final ResponseEntity<ResponseErrorDto> handleDataIntegrityViolationExceptions(DataIntegrityViolationException ex)
   {
     Map<String, String> errors = new HashMap<>();
-    errors.put("image", "Image is required");
+    errors.put("image", "Obraz jest wymagany");
 
     return ResponseEntity
         .status(HttpStatus.BAD_REQUEST)
@@ -118,7 +118,7 @@ public class RestExceptionHandler
   public final ResponseEntity<ResponseErrorDto> handleMultipartExceptions(MultipartException ex)
   {
     Map<String, String> errors = new HashMap<>();
-    errors.put("image", "Image is required");
+    errors.put("image", "Obraz jest wymagany");
 
     return ResponseEntity
         .status(HttpStatus.BAD_REQUEST)

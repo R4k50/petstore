@@ -30,9 +30,9 @@ public class PopulateProductDataLoader implements ApplicationRunner
 
   private void populateProducts()
   {
-    ProductCategory food = productCategoryRepository.getByName("food");
-    ProductCategory dogs = productCategoryRepository.getByName("dogs");
-    ProductCategory cats = productCategoryRepository.getByName("cats");
+    ProductCategory food = productCategoryRepository.getByName("jedzenie");
+    ProductCategory dogs = productCategoryRepository.getByName("psy");
+    ProductCategory cats = productCategoryRepository.getByName("koty");
 
     for (int i = 0; i < 100; i++)
     {
@@ -51,7 +51,7 @@ public class PopulateProductDataLoader implements ApplicationRunner
 
       createProduct(NewProductDto.builder()
           .name("Pet food " + (i + 1))
-          .description("My son loves it!")
+          .description("Mmm smaczne!")
           .price(new BigDecimal("9.99"))
           .quantity(i)
           .categories(productCategories)
@@ -77,14 +77,14 @@ public class PopulateProductDataLoader implements ApplicationRunner
 
   private void populateProductCategories()
   {
-    createProductCategory("toys");
-    createProductCategory("accessories");
-    createProductCategory("grooming");
-    createProductCategory("food");
-    createProductCategory("dogs");
-    createProductCategory("cats");
-    createProductCategory("birds");
-    createProductCategory("rodents");
+    createProductCategory("zabawki");
+    createProductCategory("akcesoria");
+    createProductCategory("higiena");
+    createProductCategory("jedzenie");
+    createProductCategory("psy");
+    createProductCategory("koty");
+    createProductCategory("ptaki");
+    createProductCategory("gryzonie");
   }
 
   private void createProductCategory(String name)

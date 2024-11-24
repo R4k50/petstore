@@ -15,11 +15,11 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ProductCategoryDto
 {
-  @NotNull(message = "Id is required")
+  @NotNull(message = "Id jest wymagane")
   @Id
   private Long id;
 
-  @NotEmpty(message = "Name is required")
-  @Size(min = 2, max = 50, message = "Name must be between 2 and 50 characters")
+  @NotEmpty(message = "Imię jest wymagane")
+  @Size(min = 2, max = 50, message = "Imię musi mieć od 2 do 50 znaków")
   private String name;
 }

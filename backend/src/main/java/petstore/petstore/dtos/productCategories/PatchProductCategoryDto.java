@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class PatchProductCategoryDto
 {
-  @Size(min = 2, max = 50, message = "Name must be between 2 and 50 characters")
+  @Size(min = 2, max = 50, message = "Imię musi mieć od 2 do 50 znaków")
   private String name;
 }

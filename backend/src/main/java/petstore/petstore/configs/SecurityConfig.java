@@ -43,6 +43,12 @@ public class SecurityConfig
             .requestMatchers(HttpMethod.PATCH, "/product/{id}").permitAll()
             .requestMatchers(HttpMethod.DELETE, "/product/{id}").permitAll()
 
+            .requestMatchers(HttpMethod.GET, "/product-categories").permitAll()
+            .requestMatchers(HttpMethod.GET, "/product-category/{id}").permitAll()
+            .requestMatchers(HttpMethod.POST, "/product-category").permitAll()
+            .requestMatchers(HttpMethod.PATCH, "/product-category/{id}").permitAll()
+            .requestMatchers(HttpMethod.DELETE, "/product-category/{id}").permitAll()
+
             .requestMatchers(HttpMethod.GET, "/image/{name}").permitAll()
             .requestMatchers(HttpMethod.POST, "/image").permitAll()
             .requestMatchers(HttpMethod.PATCH, "/image/{name}").permitAll()

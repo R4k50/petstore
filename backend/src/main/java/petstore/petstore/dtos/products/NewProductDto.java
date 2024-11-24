@@ -6,8 +6,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import petstore.petstore.entities.ProductCategory;
 
 import java.math.BigDecimal;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -32,6 +34,9 @@ public class NewProductDto
   @NotNull(message = "Quantity is required")
   @DecimalMin(value = "0", inclusive = true, message = "Quantity must be a non-negative number")
   private int quantity;
+
+  @NotNull(message = "Category is required")
+  private Set<ProductCategory> categories;
 
   @JsonProperty(access = JsonProperty.Access.READ_ONLY)
   private String img;

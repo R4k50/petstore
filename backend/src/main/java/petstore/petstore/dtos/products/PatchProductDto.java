@@ -1,15 +1,14 @@
 package petstore.petstore.dtos.products;
 
-import jakarta.validation.constraints.DecimalMax;
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.Digits;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import petstore.petstore.entities.ProductCategory;
 
 import java.math.BigDecimal;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -27,6 +26,8 @@ public class PatchProductDto
   @DecimalMax(value = "999.99", inclusive = true, message = "Price must be at most 999.99")
   @Digits(integer = 3, fraction = 2, message = "Price must have exactly two decimal places")
   private BigDecimal price;
+
+  private Set<ProductCategory> categories;
 
   @DecimalMin(value = "0", inclusive = true, message = "Quantity must be a non negative number")
   private int quantity;

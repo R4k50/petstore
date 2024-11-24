@@ -8,9 +8,10 @@ public enum SearchOperation {
   LIKE,
   STARTS_WITH,
   ENDS_WITH,
-  CONTAINS;
+  CONTAINS,
+  IN_SET;
 
-  public static final String[] SIMPLE_OPERATION_SET = { ":", "!", ">", "<", "~" };
+  public static final String[] SIMPLE_OPERATION_SET = { ":", "!", ">", "<", "~", ";" };
 
   public static SearchOperation getSimpleOperation(char input)
   {
@@ -21,7 +22,8 @@ public enum SearchOperation {
       case '>' -> GREATER_THAN;
       case '<' -> LESS_THAN;
       case '~' -> LIKE;
-      default -> null;
+      case ';' -> IN_SET;
+      default  -> null;
     };
   }
 }

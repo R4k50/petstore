@@ -11,6 +11,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -41,6 +43,14 @@ public class Product
   @Column(name = "quantity", nullable = false)
   @DecimalMin(value = "0")
   private int quantity;
+
+  @ManyToMany(fetch = FetchType.LAZY)
+  @JoinTable(
+      name = "product_category_map",
+      joinColumns = @JoinColumn(name = "product_id"),
+      inverseJoinColumns = @JoinColumn(name = "category_id")
+  )
+  private Set<ProductCategory> categories = new HashSet<>();
 
   @Column(name = "img", nullable = false)
   private String img;

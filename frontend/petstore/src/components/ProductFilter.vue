@@ -2,52 +2,84 @@
   <el-card class="filter-container" shadow="never">
     <div class="filters">
       <div class="filter-row">
-        <el-input
-          v-model="filters.name"
-          placeholder="Wyszukaj po nazwie"
-          clearable
-          @clear="applyFilters"
-          @input="applyFilters"
-          class="name-filter"
-        />
+        <div class="filter-item">
+          <label class="filter-label">Nazwa</label>
+          <el-input v-model="filters.name" placeholder="Wpisz nazwę" clearable @clear="applyFilters"
+            @input="applyFilters" class="name-filter">
+            <template #append>
+              <el-button @click="searchByName" style="width: 50px; height: 36px; padding: 0;">
+                <Icon icon="mdi:search" class="search-icon" />
+              </el-button>
+            </template>
+          </el-input>
+        </div>
+        <div class="filter-item">
+          <el-button type="primary" @click="clearFilters" class="clear-button">Wyczyść filtrowanie</el-button>
+        </div>
+      </div>
 
-        <el-select
-          v-model="filters.maxQuantity"
-          placeholder="Dostępność produktów"
-          @change="applyFilters"
-          class="quantity-select"
-        >
-          <el-option label="Produkt niedostępny" :value="0"></el-option>
-          <el-option label="Ostatnie sztuki" :value="10"></el-option>
-          <el-option label="Produkt dostępny" :value="11"></el-option>
-        </el-select>
+      <div class="filter-row">
+        <div class="filter-item">
+          <label class="filter-label">Cena</label>
+          <div class="price-container">
+            <div class="price-inputs">
+              <el-input v-model="filters.minPrice" placeholder="Od" @input="onPriceInputChange" class="price-input">
+              </el-input>
+              <el-input v-model="filters.maxPrice" placeholder="Do" @input="onPriceInputChange" class="price-input">
+              </el-input>
+            </div>
+            <el-slider v-model="priceRange" range :min="0" :max="1000" step="1" @change="updatePriceFilter"
+              class="price-slider" :format-tooltip="formatPriceTooltip" :marks="marks" />
+          </div>
+        </div>
+      </div>
 
-        <el-slider
-          v-model="priceRange"
-          range
-          :min="0"
-          :max="100"
-          step="1"
-          @change="updatePriceFilter"
-          class="price-slider"
-          :format-tooltip="formatPriceTooltip"
-        />
+      <div class="filter-row">
+        <div class="filter-item">
+          <label class="filter-label filter-header">Filtry</label>
+        </div>
+      </div>
 
-        <el-select
-          v-model="filters.sortByPrice"
-          placeholder="Sortuj według ceny"
-          @change="applyFilters"
-          class="sort-select"
-        >
-          <el-option :label="sortOptions[0].label" :value="sortOptions[0].value">
-            <el-icon class="sort-icon"><ArrowUp /></el-icon> {{ sortOptions[0].label }}
-          </el-option>
-          <el-option :label="sortOptions[1].label" :value="sortOptions[1].value">
-            <el-icon class="sort-icon"><ArrowDown /></el-icon> {{ sortOptions[1].label }}
-          </el-option>
-        </el-select>
+      <div class="filter-row">
+        <div class="filter-item">
+          <label class="filter-label">Dostępność</label>
+          <el-select v-model="filters.maxQuantity" placeholder="Wybierz dostępność" @change="applyFilters"
+            class="quantity-select">
+            <el-option label="Produkt niedostępny" :value="0"></el-option>
+            <el-option label="Ostatnie sztuki" :value="10"></el-option>
+            <el-option label="Produkt dostępny" :value="11"></el-option>
+          </el-select>
+        </div>
 
-        <el-button type="primary" @click="clearFilters">Wyczyść filtrowanie</el-button>
+        <div class="filter-item">
+          <label class="filter-label">Kategorie</label>
+          <el-select v-model="filters.categories" multiple filterable :reserve-keyword="false"
+            placeholder="Wybierz kategorie" @change="applyFilters" class="category-select">
+            <el-option v-for="category in categories" :key="category.id" :label="category.name"
+              :value="category.name" />
+          </el-select>
+        </div>
+      </div>
+
+      <el-divider></el-divider>
+
+      <div class="filter-row sort-row">
+        <div class="filter-item">
+          <label class="filter-label">Sortuj</label>
+          <el-select v-model="filters.sortByPrice" placeholder="Wybierz opcję" @change="applyFilters"
+            class="sort-select">
+            <el-option :label="sortOptions[0].label" :value="sortOptions[0].value">
+              <el-icon class="sort-icon">
+                <ArrowUp />
+              </el-icon> {{ sortOptions[0].label }}
+            </el-option>
+            <el-option :label="sortOptions[1].label" :value="sortOptions[1].value">
+              <el-icon class="sort-icon">
+                <ArrowDown />
+              </el-icon> {{ sortOptions[1].label }}
+            </el-option>
+          </el-select>
+        </div>
       </div>
     </div>
   </el-card>
@@ -56,16 +88,30 @@
 <script setup>
 import { ref } from 'vue';
 import { ArrowUp, ArrowDown } from '@element-plus/icons-vue';
+import { Icon } from '@iconify/vue';
+
+const props = defineProps({
+  categories: {
+    type: Array,
+    default: () => [],
+  },
+});
 
 const filters = ref({
   name: '',
   maxQuantity: null,
   minPrice: null,
   maxPrice: null,
-  sortByPrice: null, 
+  sortByPrice: null,
+  categories: [],
 });
 
-const priceRange = ref([0, 500]);
+const priceRange = ref([0, 1000]);
+
+const marks = {
+  0: '0',
+  1000: '1000',
+};
 
 const sortOptions = [
   { label: 'Cena rosnąco', value: 'priceAsc', icon: ArrowUp },
@@ -74,19 +120,38 @@ const sortOptions = [
 
 const emit = defineEmits(['updateFilters']);
 
-const updatePriceFilter = () => {
-  filters.value.minPrice = priceRange.value[0];
-  filters.value.maxPrice = priceRange.value[1];
-  applyFilters();
-};
-
 const applyFilters = () => {
   emit('updateFilters', filters.value);
 };
 
 const clearFilters = () => {
-  filters.value = { name: '', maxQuantity: null, minPrice: null, maxPrice: null, sortByPrice: null };
-  priceRange.value = [0, 500];
+  filters.value = { name: '', maxQuantity: null, minPrice: null, maxPrice: null, sortByPrice: null, categories: [] };
+  priceRange.value = [0, 1000];
+  applyFilters();
+};
+
+const onPriceInputChange = () => {
+  if (filters.value.minPrice > filters.value.maxPrice && filters.value.maxPrice !== null) {
+    filters.value.minPrice = filters.value.maxPrice;
+  }
+  if (filters.value.minPrice < 0) filters.value.minPrice = 0;
+  if (filters.value.maxPrice > 1000) filters.value.maxPrice = 1000;
+  if (filters.value.minPrice !== null && filters.value.maxPrice === null) {
+    filters.value.maxPrice = 1000;
+  }
+  priceRange.value = [filters.value.minPrice, filters.value.maxPrice];
+  applyFilters();
+};
+
+const updatePriceFilter = () => {
+  if (priceRange.value[0] > priceRange.value[1]) {
+    filters.value.minPrice = priceRange.value[1];
+    filters.value.maxPrice = priceRange.value[0];
+  } else {
+    filters.value.minPrice = priceRange.value[0];
+    filters.value.maxPrice = priceRange.value[1];
+  }
+
   applyFilters();
 };
 
@@ -104,42 +169,125 @@ const formatPriceTooltip = (value) => `${value} zł`;
 
 .filters {
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
+  flex-direction: column;
+  gap: 20px;
   justify-content: center;
 }
 
 .filter-row {
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
+  gap: 20px;
   width: 100%;
+  flex-wrap: wrap;
 }
 
-.name-filter {
-  flex: 2;
+.filter-item {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  width: 100%;
   max-width: 250px;
-  font-family: 'Phudu', sans-serif !important;
 }
 
-.quantity-select {
-  flex: 1;
-  max-width: 200px;
+.filter-row:first-child .filter-item {
+  max-width: calc(50% - 10px);
+}
+
+.filter-row:nth-child(2) .filter-item {
+  max-width: calc(100% - 25px);
+}
+
+.filter-row:nth-child(3) .filter-item {
+  max-width: 100%;
+}
+
+.filter-row:nth-child(4) .filter-item {
+  max-width: calc(50% - 10px);
+}
+
+.filter-row:nth-child(5) .filter-item {
+  max-width: 100%;
+}
+
+.filter-label {
+  font-size: 12px;
+  font-weight: normal;
+  margin-bottom: 8px;
+  color: #666;
+  text-align: left;
+}
+
+.filter-header {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: -5px;
+}
+
+.name-filter ::placeholder {
+  font-family: Quicksand !important;
+  font-weight: 500;
+}
+
+.name-filter input::placeholder,
+.quantity-select,
+.sort-select,
+.category-select {
+  width: 100%;
+  font-family: Quicksand;
+  font-weight: 500;
 }
 
 .price-slider {
-  flex: 2;
-  margin-left: 8px;
-  margin-right: 8px;
-  max-width: 300px;
-}
-
-.sort-select {
-  flex: 1;
-  max-width: 200px;
+  width: 100%;
+  margin-left: 10px;
 }
 
 .sort-icon {
   margin-right: 8px;
+}
+
+.clear-button {
+  max-width: 150px;
+  align-self: left;
+  margin-top: 24px;
+}
+
+.el-divider {
+  margin-top: 25px;
+  margin-bottom: -8px;
+}
+
+.search-icon {
+  font-size: 18px;
+}
+
+.sort-row {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  gap: 20px;
+}
+
+.price-container {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.price-inputs {
+  display: flex;
+  gap: 10px;
+  width: 15%;
+}
+
+.price-input ::placeholder {
+  width: 80px;
+  font-family: Quicksand;
+  font-weight: 500;
+}
+
+.price-slider {
+  flex-grow: 1;
+  max-width: 50%;
 }
 </style>

@@ -52,3 +52,7 @@ main {
 .el-page-header__title{
     display: none;
 }
+
+.el-input__inner {
+    font-family: Quicksand;
+}

@@ -49,6 +49,24 @@ public class SecurityConfig
             .requestMatchers(HttpMethod.PATCH, "/product-category/{id}").permitAll()
             .requestMatchers(HttpMethod.DELETE, "/product-category/{id}").permitAll()
 
+            .requestMatchers(HttpMethod.GET, "/animals").permitAll()
+            .requestMatchers(HttpMethod.GET, "/animal/{id}").permitAll()
+            .requestMatchers(HttpMethod.POST, "/animal").permitAll()
+            .requestMatchers(HttpMethod.PATCH, "/animal/{id}").permitAll()
+            .requestMatchers(HttpMethod.DELETE, "/animal/{id}").permitAll()
+
+            .requestMatchers(HttpMethod.GET, "/animal-categories").permitAll()
+            .requestMatchers(HttpMethod.GET, "/animal-category/{id}").permitAll()
+            .requestMatchers(HttpMethod.POST, "/animal-category").permitAll()
+            .requestMatchers(HttpMethod.PATCH, "/animal-category/{id}").permitAll()
+            .requestMatchers(HttpMethod.DELETE, "/animal-category/{id}").permitAll()
+
+            .requestMatchers(HttpMethod.GET, "/sectors").permitAll()
+            .requestMatchers(HttpMethod.GET, "/sector/{id}").permitAll()
+            .requestMatchers(HttpMethod.POST, "/sector").permitAll()
+            .requestMatchers(HttpMethod.PATCH, "/sector/{id}").permitAll()
+            .requestMatchers(HttpMethod.DELETE, "/sector/{id}").permitAll()
+
             .requestMatchers(HttpMethod.GET, "/image/{name}").permitAll()
             .requestMatchers(HttpMethod.POST, "/image").permitAll()
             .requestMatchers(HttpMethod.PATCH, "/image/{name}").permitAll()

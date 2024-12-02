@@ -33,7 +33,7 @@ public class RestExceptionHandler
   @ExceptionHandler(RuntimeException.class)
   public final ResponseEntity<ErrorDto> handleRuntimeExceptions(RuntimeException ex)
   {
-    System.out.println(ex);
+    ex.printStackTrace();
 
     return ResponseEntity
         .status(HttpStatus.INTERNAL_SERVER_ERROR)

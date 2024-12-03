@@ -18,19 +18,21 @@
         </div>
       </div>
 
-      <div class="filter-row">
-        <div class="filter-item">
-          <label class="filter-label">Cena</label>
-          <div class="price-container">
-            <div class="price-inputs">
-              <el-input v-model="filters.minPrice" placeholder="Od" @input="onPriceInputChange" class="price-input">
-              </el-input>
-              <el-input v-model="filters.maxPrice" placeholder="Do" @input="onPriceInputChange" class="price-input">
-              </el-input>
-            </div>
-            <el-slider v-model="priceRange" range :min="0" :max="1000" step="1" @change="updatePriceFilter"
-              class="price-slider" :format-tooltip="formatPriceTooltip" :marks="marks" />
+      <div class="filter-price-item">
+        <label class="filter-label">Cena</label>
+        <div class="price-container">
+          <div class="price-input-group">
+            <div class="price-label">Od</div>
+            <el-input v-model="filters.minPrice" placeholder="0" @input="onPriceInputChange" class="price-input">
+            </el-input>
           </div>
+          <div class="price-input-group">
+            <div class="price-label">Do</div>
+            <el-input v-model="filters.maxPrice" placeholder="1000" @input="onPriceInputChange" class="price-input">
+            </el-input>
+          </div>
+          <el-slider v-model="priceRange" range :min="0" :max="1000" step="1" @change="updatePriceFilter"
+            class="price-slider" :format-tooltip="formatPriceTooltip" :marks="marks" />
         </div>
       </div>
 
@@ -189,6 +191,14 @@ const formatPriceTooltip = (value) => `${value} zł`;
   max-width: 250px;
 }
 
+.filter-price-item {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  width: 100%;
+  max-width: 600px;
+}
+
 .filter-row:first-child .filter-item {
   max-width: calc(50% - 10px);
 }
@@ -268,26 +278,33 @@ const formatPriceTooltip = (value) => `${value} zł`;
   gap: 20px;
 }
 
-.price-container {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
-
-.price-inputs {
-  display: flex;
-  gap: 10px;
-  width: 15%;
-}
-
 .price-input ::placeholder {
   width: 80px;
   font-family: Quicksand;
   font-weight: 500;
 }
 
+.price-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.price-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 60px;
+}
+
+.price-label {
+  font-size: 12px;
+  color: #757575;
+}
+
 .price-slider {
   flex-grow: 1;
-  max-width: 50%;
+  width: 300px;
 }
 </style>

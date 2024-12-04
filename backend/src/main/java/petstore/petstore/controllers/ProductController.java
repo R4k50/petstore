@@ -83,6 +83,6 @@ public class ProductController
   public void delete(@PathVariable Long id)
   {
     Product product = productService.delete(id);
-    imageService.delete(product.getImg());
+//    imageService.delete(product.getImg());
   }
 }

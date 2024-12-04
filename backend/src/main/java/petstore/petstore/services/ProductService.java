@@ -1,8 +1,12 @@
 package petstore.petstore.services;
 
 import com.google.common.base.Joiner;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.transaction.annotation.Transactional;
 import petstore.petstore.dtos.products.NewProductDto;
 import petstore.petstore.dtos.products.PatchProductDto;
 import petstore.petstore.dtos.products.ProductDto;
@@ -28,6 +32,8 @@ public class ProductService
 {
   private final ProductRepository productRepository;
   private final ProductMapper productMapper;
+  @PersistenceContext
+  EntityManager entityManager;
 
   public ProductDto findById(Long id)
   {
@@ -107,10 +113,16 @@ public class ProductService
     return productMapper.toProductDto(updatedProduct);
   }
 
+  @Transactional
   public Product delete(Long id)
   {
     Product product = productRepository.findById(id)
         .orElseThrow(() -> new AppException("Nieznany produkt", HttpStatus.NOT_FOUND));
+
+    String deleteJoinTableQuery = "DELETE FROM product_category_map WHERE product_id = ?";
+    Query query = entityManager.createNativeQuery(deleteJoinTableQuery);
+    query.setParameter(1, id);
+    query.executeUpdate();
 
     try {
       productRepository.delete(product);

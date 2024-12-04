@@ -1,9 +1,12 @@
 package petstore.petstore.services;
 
 import com.google.common.base.Joiner;
-import jakarta.transaction.Transactional;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.transaction.annotation.Transactional;
 import petstore.petstore.dtos.animals.NewAnimalDto;
 import petstore.petstore.dtos.animals.PatchAnimalDto;
 import petstore.petstore.dtos.animals.AnimalDto;
@@ -40,6 +43,8 @@ public class AnimalService
   private final AnimalCategoryRepository animalCategoryRepository;
   private final SectorRepository sectorRepository;
   private final AnimalMapper animalMapper;
+  @PersistenceContext
+  EntityManager entityManager;
 
   public AnimalDto findById(Long id)
   {
@@ -131,10 +136,16 @@ public class AnimalService
     return animalMapper.toAnimalDto(updatedAnimal);
   }
 
+  @Transactional
   public Animal delete(Long id)
   {
     Animal animal = animalRepository.findById(id)
         .orElseThrow(() -> new AppException("Nieznane zwierzę", HttpStatus.NOT_FOUND));
+
+    String deleteJoinTableQuery = "DELETE FROM animal_category_map WHERE animal_id = ?";
+    Query query = entityManager.createNativeQuery(deleteJoinTableQuery);
+    query.setParameter(1, id);
+    query.executeUpdate();
 
     try {
       animalRepository.delete(animal);

@@ -48,7 +48,7 @@ public class Animal
   private Set<AnimalCategory> categories = new HashSet<>();
 
   @ManyToOne
-  @JoinColumn(name = "sector_id", nullable = false)
+  @JoinColumn(name = "sector_id")
   private Sector sector;
 
   @Column(name = "img", nullable = false)

@@ -83,6 +83,6 @@ public class AnimalController
   public void delete(@PathVariable Long id)
   {
     Animal animal = animalService.delete(id);
-    imageService.delete(animal.getImg());
+//    imageService.delete(animal.getImg());
   }
 }

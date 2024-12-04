@@ -1,8 +1,14 @@
 package petstore.petstore.services;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.transaction.annotation.Transactional;
 import petstore.petstore.animalCategories.AnimalCategoryDto;
 import petstore.petstore.animalCategories.NewAnimalCategoryDto;
 import petstore.petstore.animalCategories.PatchAnimalCategoryDto;
+import petstore.petstore.entities.Animal;
 import petstore.petstore.entities.AnimalCategory;
 import petstore.petstore.exceptions.AppException;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +25,8 @@ public class AnimalCategoryService
 {
   private final AnimalCategoryRepository animalCategoryRepository;
   private final AnimalCategoryMapper animalCategoryMapper;
+  @PersistenceContext
+  EntityManager entityManager;
 
   public AnimalCategoryDto findById(Long id)
   {
@@ -53,11 +61,23 @@ public class AnimalCategoryService
     return animalCategoryMapper.toAnimalCategoryDto(updatedCategory);
   }
 
+  @Transactional
   public void delete(Long id)
   {
     AnimalCategory animalCategory = animalCategoryRepository.findById(id)
         .orElseThrow(() -> new AppException("Nieznana kategoria", HttpStatus.NOT_FOUND));
 
-    animalCategoryRepository.delete(animalCategory);
+    String deleteJoinTableQuery = "DELETE FROM animal_category_map WHERE category_id = ?";
+    Query query = entityManager.createNativeQuery(deleteJoinTableQuery);
+    query.setParameter(1, id);
+    query.executeUpdate();
+
+    try {
+      animalCategoryRepository.delete(animalCategory);
+    }
+    catch (DataIntegrityViolationException ex)
+    {
+      throw new AppException("Nie można usunąć kategorii", HttpStatus.BAD_REQUEST);
+    }
   }
 }

@@ -28,9 +28,11 @@ public class SectorController
   }
 
   @GetMapping("/sectors")
-  public ResponseEntity<Page<Sector>> getAll(Pageable pageable, @RequestParam(required = false) String search)
-  {
-    Page<Sector> sectors = sectorService.findAll(pageable);
+  public ResponseEntity<Page<Sector>> getAll(Pageable pageable, @RequestParam(required = false) String search) {
+    Page<Sector> sectors = (search != null)
+        ? sectorService.findAll(pageable, search)
+        : sectorService.findAll(pageable);
+
     return ResponseEntity.ok(sectors);
   }
 

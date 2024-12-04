@@ -1,17 +1,24 @@
 package petstore.petstore.services;
 
+import com.google.common.base.Joiner;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import petstore.petstore.dtos.sectors.NewSectorDto;
 import petstore.petstore.dtos.sectors.PatchSectorDto;
 import petstore.petstore.dtos.sectors.SectorDto;
 import petstore.petstore.entities.Sector;
+import petstore.petstore.enums.SearchOperation;
 import petstore.petstore.exceptions.AppException;
 import petstore.petstore.mappers.SectorMapper;
 import petstore.petstore.repositories.SectorRepository;
+import petstore.petstore.specifications.SectorSpecificationsBuilder;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 @RequiredArgsConstructor
@@ -40,6 +47,34 @@ public class SectorService
   public Page<Sector> findAll(Pageable pageable)
   {
     Page<Sector> sectors = sectorRepository.findAll(pageable);
+    return sectors;
+  }
+
+  public Page<Sector> findAll(Pageable pageable, String search) {
+    SectorSpecificationsBuilder builder = new SectorSpecificationsBuilder();
+
+    String operationSetExper = Joiner.on("|").join(SearchOperation.SIMPLE_OPERATION_SET);
+    Pattern pattern = Pattern.compile(
+        "(\\w+?)(" + operationSetExper + ")(\\p{Punct}?)(\\w+?)(\\p{Punct}?),"
+    );
+
+    if (search != null) {
+      Matcher matcher = pattern.matcher(search + ",");
+
+      while (matcher.find()) {
+        builder.with(
+            matcher.group(1),
+            matcher.group(2),
+            matcher.group(4),
+            matcher.group(3),
+            matcher.group(5)
+        );
+      }
+    }
+
+    Specification<Sector> sectorSpecification = builder.build();
+    Page<Sector> sectors = sectorRepository.findAll(sectorSpecification, pageable);
+
     return sectors;
   }
 

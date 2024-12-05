@@ -9,6 +9,7 @@
           <div v-else-if="error">{{ error }}</div>
           <div v-else>
             <h1>{{ animal.name }}</h1>
+            <AnimalCategoryTags :categories="animal.categories" />
             <h2><strong>{{ animal.price }} PLN</strong></h2>
             </div>
         </div>
@@ -21,6 +22,7 @@
 import { ref, watch, onMounted, computed } from 'vue';
 import axios from 'axios';
 import { Icon } from '@iconify/vue';
+import AnimalCategoryTags from '@/components/AnimalCategoryTags.vue';
 
 const props = defineProps(['animalId']);
 const animal = ref({});

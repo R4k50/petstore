@@ -5,24 +5,27 @@
       <h2 class="form-title">Edytuj produkt</h2>
 
       <el-form :model="form">
-        <el-form-item label="Nazwa" prop="name">
+        <el-form-item label="Nazwa" prop="name" :error="error?.name" :show-message="error?.name ? true : false">
           <el-input v-model="form.name" placeholder="Wprowadź nazwę produktu" class="create-product-input" />
         </el-form-item>
 
-        <el-form-item label="Cena" prop="price">
+        <el-form-item label="Cena" prop="price" :error="error?.price" :show-message="error?.price ? true : false">
           <el-input-number v-model="form.price" :min="0" placeholder="Podaj cenę" class="create-product-input" />
         </el-form-item>
 
-        <el-form-item label="Opis" prop="description">
+        <el-form-item label="Opis" prop="description" :error="error?.description"
+          :show-message="error?.description ? true : false">
           <el-input type="textarea" v-model="form.description" placeholder="Wprowadź opis produktu" rows="3"
             class="create-product-input" />
         </el-form-item>
 
-        <el-form-item label="Ilość" prop="quantity">
+        <el-form-item label="Ilość" prop="quantity" :error="error?.quantity"
+          :show-message="error?.quantity ? true : false">
           <el-input-number v-model="form.quantity" :min="0" placeholder="Podaj ilość" class="create-product-input" />
         </el-form-item>
 
-        <el-form-item label="Kategorie" prop="categories">
+        <el-form-item label="Kategorie" prop="categories" :error="error?.categories"
+          :show-message="error?.categories ? true : false">
           <el-select v-model="form.categories" multiple placeholder="Wybierz kategorie" value-key="id"
             class="create-product-input" collapse-tags>
             <el-option v-for="category in categories" :key="category.id" :label="category.name" :value="category.id" />
@@ -57,7 +60,7 @@ import { ref, watch, reactive } from 'vue';
 import axios from 'axios';
 import { ElNotification } from 'element-plus';
 import { Icon } from '@iconify/vue';
-import { UploadFilled } from '@element-plus/icons-vue'
+import { UploadFilled } from '@element-plus/icons-vue';
 
 const props = defineProps({
   productId: {
@@ -76,6 +79,8 @@ const form = reactive({
   image: null,
   categories: [],
 });
+
+const error = ref({}); 
 
 const image = ref(null);
 const categories = ref([]);
@@ -102,7 +107,6 @@ const loadProduct = async () => {
     form.price = productData.price;
     form.quantity = productData.quantity;
     form.description = productData.description;
-
     form.categories = productData.categories.map(category => category.id);
   } catch (error) {
     console.error('Błąd podczas ładowania produktu:', error);
@@ -115,6 +119,8 @@ const loadProduct = async () => {
 
 const saveProduct = async () => {
   try {
+    error.value = {};
+
     const formData = new FormData();
 
     const productToSend = {
@@ -145,12 +151,15 @@ const saveProduct = async () => {
       title: 'Sukces',
       message: 'Produkt został zaktualizowany',
     });
-  } catch (error) {
-    console.error('Błąd podczas zapisywania produktu:', error);
-    ElNotification.error({
-      title: 'Błąd',
-      message: 'Nie udało się zapisać produktu. Spróbuj ponownie',
-    });
+  } catch (err) {
+    if (err.response && err.response.data && err.response.data.errors) {
+      error.value = err.response.data.errors;
+    } else {
+      ElNotification.error({
+        title: 'Błąd',
+        message: 'Nie udało się zapisać produktu. Spróbuj ponownie',
+      });
+    }
   }
 };
 
@@ -189,16 +198,12 @@ loadCategories();
   z-index: 999;
   display: flex;
   justify-content: center;
-  /* Wyśrodkowanie kontenera */
   align-items: center;
-  /* Wyśrodkowanie kontenera */
 }
 
 .create-product-container {
   width: 500px;
-  /* Szerokość kontenera formularza */
   max-width: 90%;
-  /* Maksymalna szerokość, aby formularz nie rozciągał się na całą szerokość ekranu */
   padding: 20px;
   border: 1px solid #dcdfe6;
   border-radius: 8px;
@@ -208,18 +213,14 @@ loadCategories();
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  /* Dopasowanie szerokości formularza do kontenera */
   justify-content: flex-start;
-  /* Wyśrodkowanie zawartości w pionie */
   position: relative;
-  /* Aby pozycjonowanie absolutne w .close działało w kontekście kontenera */
 }
 
 .close {
   position: absolute;
   top: 10px;
   right: 10px;
-  /* Przesunięcie w prawo w obrębie kontenera */
   font-size: 1.8em;
   color: #333;
   cursor: pointer;

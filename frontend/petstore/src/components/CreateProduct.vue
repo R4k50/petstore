@@ -5,24 +5,27 @@
       <h2 class="form-title">Dodaj nowy produkt</h2>
 
       <el-form :model="product">
-        <el-form-item label="Nazwa" prop="name">
+        <el-form-item label="Nazwa" prop="name" :error="error?.name" :show-message="error?.name ? true : false">
           <el-input v-model="product.name" placeholder="Wprowadź nazwę produktu" class="create-product-input" />
         </el-form-item>
 
-        <el-form-item label="Cena" prop="price">
+        <el-form-item label="Cena" prop="price" :error="error?.price" :show-message="error?.price ? true : false">
           <el-input-number v-model="product.price" :min="0" placeholder="Podaj cenę" class="create-product-input" />
         </el-form-item>
 
-        <el-form-item label="Opis" prop="description">
+        <el-form-item label="Opis" prop="description" :error="error?.description"
+          :show-message="error?.description ? true : false">
           <el-input type="textarea" v-model="product.description" placeholder="Wprowadź opis produktu" rows="3"
             class="create-product-input" />
         </el-form-item>
 
-        <el-form-item label="Ilość" prop="quantity">
+        <el-form-item label="Ilość" prop="quantity" :error="error?.quantity"
+          :show-message="error?.quantity ? true : false">
           <el-input-number v-model="product.quantity" :min="0" placeholder="Podaj ilość" class="create-product-input" />
         </el-form-item>
 
-        <el-form-item label="Kategorie" prop="categories">
+        <el-form-item label="Kategorie" prop="categories" :error="error?.categories"
+          :show-message="error?.categories ? true : false">
           <el-select v-model="product.categories" multiple placeholder="Wybierz kategorie" value-key="id"
             class="create-product-input" collapse-tags>
             <el-option v-for="category in categories" :key="category.id" :label="category.name" :value="category" />
@@ -62,6 +65,7 @@ import { UploadFilled } from '@element-plus/icons-vue'
 const emit = defineEmits();
 
 const image = ref(null);
+const error = ref({});
 
 const product = reactive({
   name: '',
@@ -101,6 +105,8 @@ const handleImage = (event) => {
 
 const submitProduct = async () => {
   try {
+    error.value = {};
+
     const categoriesToSend = product.categories.map(category => ({ id: category.id }));
 
     const productToSend = {
@@ -135,13 +141,17 @@ const submitProduct = async () => {
     setTimeout(() => {
       window.location.reload();
     }, 1000);
-  } catch (error) {
-    ElNotification.error({
-      title: 'Błąd',
-      message: 'Nie udało się dodać produktu. Spróbuj ponownie',
-      type: 'error',
-      duration: 3000,
-    });
+  } catch (err) {
+    if (err.response && err.response.data && err.response.data.errors) {
+      error.value = err.response.data.errors;
+    } else {
+      ElNotification.error({
+        title: 'Błąd',
+        message: 'Nie udało się dodać produktu. Spróbuj ponownie',
+        type: 'error',
+        duration: 3000,
+      });
+    }
   }
 };
 
@@ -166,16 +176,12 @@ const closeDialog = () => {
   z-index: 999;
   display: flex;
   justify-content: center;
-  /* Wyśrodkowanie kontenera */
   align-items: center;
-  /* Wyśrodkowanie kontenera */
 }
 
 .create-product-container {
   width: 500px;
-  /* Szerokość kontenera formularza */
   max-width: 90%;
-  /* Maksymalna szerokość, aby formularz nie rozciągał się na całą szerokość ekranu */
   padding: 20px;
   border: 1px solid #dcdfe6;
   border-radius: 8px;
@@ -185,18 +191,14 @@ const closeDialog = () => {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  /* Dopasowanie szerokości formularza do kontenera */
   justify-content: flex-start;
-  /* Wyśrodkowanie zawartości w pionie */
   position: relative;
-  /* Aby pozycjonowanie absolutne w .close działało w kontekście kontenera */
 }
 
 .close {
   position: absolute;
   top: 10px;
   right: 10px;
-  /* Przesunięcie w prawo w obrębie kontenera */
   font-size: 1.8em;
   color: #333;
   cursor: pointer;

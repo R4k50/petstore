@@ -1,65 +1,68 @@
 <template>
-    <div>
-        <AdminAnimalFilter @updateFilters="updateFilters" :categories="categories" :sectors="sectors" />
-
-        <div v-if="loading">Ładowanie danych...</div>
-        <div v-else-if="error">{{ error }}</div>
-        <div v-else-if="animals.length === 0">
-            <el-empty description="Brak pozycji spełniających kryteria wyszukiwania" />
-        </div>
-
-        <div v-else>
-            <el-table :data="animals" class="product-table" @sort-change="handleSortChange">
-                <el-table-column prop="id" label="ID" width="80" sortable></el-table-column>
-                <el-table-column label="Obraz" width="120">
-                    <template #default="{ row }">
-                        <img :src="getImageUrl(row.img)" alt="Animal Image" class="thumbnail" />
-                    </template>
-                </el-table-column>
-                <el-table-column prop="name" label="Nazwa"></el-table-column>
-                <el-table-column prop="price" label="Cena" sortable></el-table-column>
-                <el-table-column prop="quantity" label="Ilość" sortable></el-table-column>
-                <el-table-column label="Kategorie">
-                    <template #default="{ row }">
-                        {{ row.categories.map(category => category.name).join(', ') }}
-                    </template>
-                </el-table-column>
-                <el-table-column label="Sektor">
-                    <template #default="{ row }">
-                        {{ row.sector.name }}
-                    </template>
-                </el-table-column>
-                <el-table-column label="Akcje" width="200">
-                    <template #default="{ row }">
-                        <div class="actions">
-                            <el-button type="warning" :icon="Edit" circle @click="openEditDialog(row.id)"></el-button>
-                            <el-button type="danger" :icon="Delete" circle @click="deleteAnimal(row.id)"
-                                style="margin-left: 1px;">
-                            </el-button>
-                        </div>
-                    </template>
-                </el-table-column>
-            </el-table>
-        </div>
-
-        <Pagination :totalElements="totalElements" :itemsPerPage="itemsPerPage" :currentPage="currentPage"
-            @page-change="goToPage" />
-
-        <div v-if="confirmDeleteModalVisible" class="modal-overlay" @click="resetDialog">
-            <div class="modal-content" @click.stop>
-                <h3>Potwierdzenie usunięcia</h3>
-                <p>Czy na pewno chcesz usunąć to zwierzę?</p>
-                <div class="modal-footer">
-                    <el-button type="danger" :icon="Delete" @click="confirmDeleteAnimal">Usuń</el-button>
-                    <el-button type="info" @click="resetDialog">Anuluj</el-button>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal-content" v-if="editDialogVisible" title="Edytuj zwierzę">
-            <EditAnimal :animalId="animalToEdit" @close="editDialogVisible = false" @refresh="fetchData(currentPage)" />
-        </div>
+  <div>
+    <div v-if="loading">Ładowanie danych...</div>
+    <div v-else-if="error">{{ error }}</div>
+    <div v-else-if="animals.length === 0">
+      <el-empty description="Brak pozycji spełniających kryteria wyszukiwania" />
     </div>
+
+    <div v-else style="width: 1200px">
+      <el-table :data="animals" class="product-table" @sort-change="handleSortChange">
+        <el-table-column prop="id" label="ID" width="80" sortable></el-table-column>
+        <el-table-column label="Obraz" width="120">
+          <template #default="{ row }">
+            <img :src="getImageUrl(row.img)" alt="Animal Image" class="thumbnail" />
+          </template>
+        </el-table-column>
+        <el-table-column prop="name" label="Nazwa"></el-table-column>
+        <el-table-column prop="price" label="Cena" sortable></el-table-column>
+        <el-table-column prop="quantity" label="Ilość" sortable></el-table-column>
+        <el-table-column label="Kategorie">
+          <template #default="{ row }">
+            {{ row.categories.map(category => category.name).join(', ') }}
+          </template>
+        </el-table-column>
+        <el-table-column label="Sektor">
+          <template #default="{ row }">
+            <div v-if="row.sector">
+              {{ row.sector.name }}
+            </div>
+            <div v-else>
+              Brak sektora
+            </div>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="Akcje" width="200">
+          <template #default="{ row }">
+            <div class="actions">
+              <el-button type="warning" :icon="Edit" circle @click="openEditDialog(row.id)"></el-button>
+              <el-button type="danger" :icon="Delete" circle @click="deleteAnimal(row.id)" style="margin-left: 1px;">
+              </el-button>
+            </div>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
+
+    <Pagination :totalElements="totalElements" :itemsPerPage="itemsPerPage" :currentPage="currentPage"
+      @page-change="goToPage" />
+
+    <div v-if="confirmDeleteModalVisible" class="modal-overlay" @click="resetDialog">
+      <div class="modal-content" @click.stop>
+        <h3>Potwierdzenie usunięcia</h3>
+        <p>Czy na pewno chcesz usunąć to zwierzę?</p>
+        <div class="modal-footer">
+          <el-button type="danger" :icon="Delete" @click="confirmDeleteAnimal">Usuń</el-button>
+          <el-button type="info" @click="resetDialog">Anuluj</el-button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-content" v-if="editDialogVisible" title="Edytuj zwierzę">
+      <EditAnimal :animalId="animalToEdit" @close="editDialogVisible = false" @refresh="fetchData(currentPage)" />
+    </div>
+  </div>
 </template>
   
   <script setup>
@@ -83,30 +86,6 @@
   const itemsPerPage = ref(15);
   const totalPages = ref(0);
   const totalElements = ref(0);
-  const categories = ref([
-  { id: 1, name: 'Ptaki' },
-  { id: 2, name: 'Gryzonie' },
-  { id: 3, name: 'Ryby' },
-  { id: 4, name: 'Gady' },
-  { id: 5, name: 'Króliki' },
-  { id: 6, name: 'Szczury' },
-  { id: 7, name: 'Węże' },
-]);
-
-const sectors = ref([
-  { id: 1, name: 'terrarium2' },
-  { id: 2, name: 'klatka1' },
-]);
-  
-  const filters = ref({
-    name: '',
-    maxQuantity: null,
-    minPrice: null,
-    maxPrice: null,
-    sortByPrice: null,
-    categories: [],
-    sector: '',
-  });
   
   const getImageUrl = (imageName) => {
     if (!imageName) {
@@ -114,38 +93,6 @@ const sectors = ref([
     }
     return `api/image/${imageName}`;
   };
-  
-const buildSearchQuery = () => {
-    const queries = [];
-    if (filters.value.name) {
-        queries.push(`name:*${filters.value.name}*`);
-    }
-    if (filters.value.minPrice !== null) {
-        queries.push(`price>${filters.value.minPrice}`);
-    }
-    if (filters.value.maxPrice !== null) {
-        queries.push(`price<${filters.value.maxPrice}`);
-    }
-    if (filters.value.maxQuantity !== null) {
-        if (filters.value.maxQuantity === 0) {
-            queries.push('quantity:0');
-        } else if (filters.value.maxQuantity === 10) {
-            queries.push('quantity>0');
-            queries.push('quantity<11');
-        } else if (filters.value.maxQuantity > 10) {
-            queries.push('quantity>10');
-        }
-    }
-    if (filters.value.categories.length > 0) {
-        const categoryQueries = filters.value.categories.map(category => `categories;${category}`);
-        queries.push(`(${categoryQueries.join(',')})`);
-    }
-    if (filters.value.sector) { 
-    queries.push(`sector;${filters.value.sector}`);
-  }
-  return queries.join(',');
-};
-
   
   const currentSort = ref({ field: 'id', order: 'asc' });
   
@@ -157,7 +104,6 @@ const buildSearchQuery = () => {
   const fetchData = async (page) => {
     try {
       loading.value = true;
-      const searchQuery = buildSearchQuery();
       const sortOrder = currentSort.value.order === 'ascending' ? `${currentSort.value.field},asc` : `${currentSort.value.field},desc`;
   
       const response = await axios.get('/api/animals', {
@@ -182,12 +128,6 @@ const buildSearchQuery = () => {
     } finally {
       loading.value = false;
     }
-  };
-  
-  const updateFilters = (newFilters) => {
-    filters.value = newFilters;
-    currentPage.value = 1;
-    fetchData(currentPage.value);
   };
   
   const goToPage = (page) => {

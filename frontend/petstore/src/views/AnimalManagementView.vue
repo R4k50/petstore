@@ -11,14 +11,6 @@
     Dodaj nowe zwierzę
   </el-button>
 
-  <el-button @click="toggleAnimalList" class="toggle-list-btn" :icon="isAnimalListVisible ? ArrowUp : ArrowDown">
-    {{ isAnimalListVisible ? 'Zwiń listę zwierząt' : 'Edytuj zwierzęta' }}
-  </el-button>
-
-  <div v-if="isAnimalListVisible">
-    <AnimalList />
-  </div>
-
   <div v-if="showModal">
     <AddAnimal @close="closeModal" />
   </div>

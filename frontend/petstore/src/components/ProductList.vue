@@ -8,7 +8,7 @@
       <el-empty description="Brak produktów spełniających kryteria wyszukiwania" />
     </div>
 
-    <div v-else>
+    <div v-else style="width: 1200px">
       <el-table :data="products" class="product-table" @sort-change="handleSortChange">
         <el-table-column prop="id" label="ID" width="80" sortable></el-table-column>
         <el-table-column label="Obraz" width="120">

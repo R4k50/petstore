@@ -8,21 +8,67 @@
       <el-empty description="Brak pozycji spełniających kryteria wyszukiwania" />
     </div>
 
-    <div v-else>
+    <div v-else style="width: 1200px">
       <el-table :data="sectors" class="product-table" @sort-change="handleSortChange">
-        <el-table-column prop="id" label="ID" width="80" sortable></el-table-column>
-        <el-table-column prop="name" label="Nazwa"></el-table-column>
-        <el-table-column prop="description" label="Opis"></el-table-column>
-        <el-table-column prop="lastCare" label="Ostatnio oporządzone" sortable></el-table-column>
-        <el-table-column prop="lastFeed" label="Ostatnio nakarmione" sortable></el-table-column>
-        <el-table-column prop="animals" label="Zwierzęta">
+        <el-table-column type="expand">
           <template #default="{ row }">
-            <div v-if="row.animals && row.animals.length">
-              {{ row.animals.map(animal => animal.name).join(', ') }}
+            <div style="width: 1000px; margin-inline: auto">
+              <h3>Zwierzęta</h3>
+              <el-table :data="row.animals" :border="childBorder">
+                <el-table-column prop="id" label="ID" width="80" sortable></el-table-column>
+                <el-table-column label="Obraz" width="120">
+                  <template #default="{ row }">
+                    <img :src="getImageUrl(row.img)" alt="Animal Image" class="thumbnail" />
+                  </template>
+                </el-table-column>
+                <el-table-column prop="name" label="Nazwa"></el-table-column>
+                <el-table-column prop="price" label="Cena" sortable></el-table-column>
+                <el-table-column prop="quantity" label="Ilość" sortable></el-table-column>
+                <el-table-column label="Kategorie">
+                  <template #default="{ row }">
+                    {{ row.categories.map(category => category.name).join(', ') }}
+                  </template>
+                </el-table-column>
+                <el-table-column label="Sektor">
+                  <template #default="{ row }">
+                    <div v-if="row.sector">
+                      {{ row.sector.name }}
+                    </div>
+                    <div v-else>
+                      Brak sektora
+                    </div>
+                  </template>
+                </el-table-column>
+                <el-table-column label="Akcje" width="200">
+                  <template #default="{ row }">
+                    <div class="actions">
+                      <el-button type="warning" :icon="Edit" circle @click="openEditDialog(row.id)"></el-button>
+                      <el-button type="danger" :icon="Delete" circle @click="deleteAnimal(row.id)"
+                        style="margin-left: 1px;">
+                      </el-button>
+                    </div>
+                  </template>
+                </el-table-column>
+              </el-table>
             </div>
-            <div v-else>
-              Brak zwierząt
-            </div>
+          </template>
+        </el-table-column>
+
+        <el-table-column prop="id" label="ID" width="80" sortable></el-table-column>
+        <el-table-column prop="name" label="Nazwa sektora"></el-table-column>
+        <el-table-column prop="description" label="Opis">
+          <template #default="{ row }">
+            {{ row.description || 'Brak opisu' }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="lastCare" label="Ostatnio oporządzone" sortable>
+          <template #default="{ row }">
+            {{ row.lastCare!=null ? (row.lastCare) : 'Puste' }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="lastFeed" label="Ostatnio nakarmione" sortable>
+          <template #default="{ row }">
+            {{ row.lastFeed!=null ? (row.lastFeed) : 'Puste' }}
           </template>
         </el-table-column>
         <el-table-column label="Akcje" width="300">
@@ -42,6 +88,21 @@
 
     <Pagination :totalElements="totalElements" :itemsPerPage="itemsPerPage" :currentPage="currentPage"
       @page-change="goToPage" />
+
+    <div v-if="confirmDeleteAnimalModalVisible" class="modal-overlay" @click="resetAnimalDialog">
+      <div class="modal-content" @click.stop>
+        <h3>Potwierdzenie usunięcia</h3>
+        <p>Czy na pewno chcesz usunąć to zwierzę?</p>
+        <div class="modal-footer">
+          <el-button type="danger" :icon="Delete" @click="confirmDeleteAnimal">Usuń</el-button>
+          <el-button type="info" @click="resetAnimalDialog">Anuluj</el-button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-content" v-if="editDialogVisible" title="Edytuj zwierzę">
+      <EditAnimal :animalId="animalToEdit" @close="editDialogVisible = false" @refresh="fetchData(currentPage)" />
+    </div>
 
     <div v-if="confirmDeleteModalVisible" class="modal-overlay" @click="resetDialog">
       <div class="modal-content" @click.stop>
@@ -63,9 +124,15 @@ import SectorFilter from '@/components/SectorFilter.vue';
 import Pagination from '@/components/Pagination.vue';
 import { ElNotification } from 'element-plus';
 import { Edit, Delete } from '@element-plus/icons-vue';
+import EditAnimal from './EditAnimal.vue';
 
+const confirmDeleteAnimalModalVisible = ref(false);
 const confirmDeleteModalVisible = ref(false);
 const sectorIdToDelete = ref(null);
+
+const editDialogVisible = ref(false);
+const animalToEdit = ref(null);
+const animalIdToDelete = ref(null);
 
 const sectors = ref([]);
 const loading = ref(true);
@@ -102,7 +169,7 @@ const fetchAnimals = async (sectorName) => {
     const response = await axios.get('/api/animals', {
       params: {
         page: 0,
-        size: 10,
+        size: 9999,
         search: `sector;${sectorName}`,
       },
     });
@@ -115,6 +182,13 @@ const fetchAnimals = async (sectorName) => {
     });
     return [];
   }
+};
+
+const getImageUrl = (imageName) => {
+  if (!imageName) {
+    return null;
+  }
+  return `api/image/${imageName}`;
 };
 
 const fetchData = async (page) => {
@@ -135,11 +209,11 @@ const fetchData = async (page) => {
     const sectorData = response.data.content.map(sector => ({
       ...sector,
       animals: [],
-      lastCare: formatDate(sector.lastCare),
-      lastFeed: formatDate(sector.lastFeed),
+      lastCare: sector.lastCare!=null ?  formatDate(sector.lastCare) : null,
+      lastFeed: sector.lastFeed!=null ? formatDate(sector.lastFeed) : null,
     }));
 
-    const animalsPromises = sectorData.map(sector => 
+    const animalsPromises = sectorData.map(sector =>
       fetchAnimals(sector.name).then(animals => {
         animalsBySector.value[sector.name] = animals;
         return { ...sector, animals };
@@ -234,9 +308,52 @@ const confirmDeleteSector = async () => {
   }
 };
 
+const confirmDeleteAnimal = async () => {
+  try {
+    await axios.delete(`/api/animal/${animalIdToDelete.value}`);
+    
+    const sectorName = Object.keys(animalsBySector.value).find(name =>
+      animalsBySector.value[name].some(animal => animal.id === animalIdToDelete.value)
+    );
+
+    if (sectorName) {
+      animalsBySector.value[sectorName] = await fetchAnimals(sectorName);
+    }
+
+    ElNotification.success({
+      title: 'Sukces',
+      message: 'Zwierzę zostało usunięte',
+    });
+
+    resetAnimalDialog();
+  } catch (error) {
+    console.error(error);
+    ElNotification.error({
+      title: 'Błąd',
+      message: 'Nie udało się usunąć zwierzęcia. Spróbuj ponownie',
+    });
+  }
+};
+
+
+const openEditDialog = (id) => {
+  animalToEdit.value = id;
+  editDialogVisible.value = true;
+};
+
+const deleteAnimal = (animalId) => {
+  animalIdToDelete.value = animalId;
+  confirmDeleteAnimalModalVisible.value = true;
+};
+
 const resetDialog = () => {
   confirmDeleteModalVisible.value = false;
   sectorIdToDelete.value = null;
+};
+
+const resetAnimalDialog = () => {
+  confirmDeleteAnimalModalVisible.value = false;
+  animalIdToDelete.value = null;
 };
 
 onMounted(() => fetchData(currentPage.value));

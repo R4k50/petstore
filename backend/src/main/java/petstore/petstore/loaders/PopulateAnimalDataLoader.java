@@ -53,7 +53,7 @@ public class PopulateAnimalDataLoader implements ApplicationRunner
     AnimalCategory rats = animalCategoryRepository.getByName("szczury");
     Sector sector;
 
-    for (int i = 0; i < 100; i++)
+    for (int i = 0; i < 12; i++)
     {
       Set<AnimalCategory> animalCategories = new HashSet<>();
 
@@ -73,7 +73,7 @@ public class PopulateAnimalDataLoader implements ApplicationRunner
       createAnimal(NewAnimalDto.builder()
           .name("Ryba " + (i + 1))
           .quantity((i % 2 == 0) ? i + 1 : 1)
-          .price(new BigDecimal("109.99"))
+          .price(new BigDecimal((i + 1) * 2.5))
           .categories(animalCategories)
           .sector(sector)
           .img("ryba.jpg")
@@ -120,9 +120,8 @@ public class PopulateAnimalDataLoader implements ApplicationRunner
     createAnimalCategory("gryzonie");
     createAnimalCategory("ryby");
     createAnimalCategory("gady");
-    createAnimalCategory("króliki");
     createAnimalCategory("szczury");
-    createAnimalCategory("węże");
+    createAnimalCategory("jaszczurki");
   }
 
   private void createAnimalCategory(String name)

@@ -3,7 +3,6 @@ package petstore.petstore.repositories;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import petstore.petstore.entities.Animal;
-import petstore.petstore.entities.Product;
 
 import java.util.Optional;
 

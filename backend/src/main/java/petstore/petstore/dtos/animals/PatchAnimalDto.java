@@ -1,6 +1,5 @@
 package petstore.petstore.dtos.animals;
 
-import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,7 +9,6 @@ import petstore.petstore.entities.AnimalCategory;
 import petstore.petstore.entities.Sector;
 
 import java.math.BigDecimal;
-import java.util.HashSet;
 import java.util.Set;
 
 @Data

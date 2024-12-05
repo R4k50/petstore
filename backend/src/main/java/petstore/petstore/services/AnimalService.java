@@ -27,10 +27,7 @@ import petstore.petstore.repositories.SectorRepository;
 import petstore.petstore.specifications.AnimalSpecificationsBuilder;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.HashSet;
-import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

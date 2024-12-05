@@ -36,6 +36,8 @@ public class SecurityConfig
         .sessionManagement(customizer -> customizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests((requests) -> requests
             .requestMatchers(HttpMethod.POST, "/login", "/register").anonymous()
+            .requestMatchers(HttpMethod.GET, "/users").permitAll()
+            .requestMatchers(HttpMethod.DELETE, "/user/{id}").permitAll()
 
             .requestMatchers(HttpMethod.GET, "/products").permitAll()
             .requestMatchers(HttpMethod.GET, "/product/{id}").permitAll()

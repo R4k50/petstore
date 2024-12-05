@@ -52,7 +52,7 @@ public class PopulateProductDataLoader implements ApplicationRunner
       createProduct(NewProductDto.builder()
           .name("Pet food " + (i + 1))
           .description("Mmm smaczne!")
-          .price(new BigDecimal("9.99"))
+          .price(new BigDecimal((i + 1) * 2.5))
           .quantity(i)
           .categories(productCategories)
           .img("karma1.jpg")

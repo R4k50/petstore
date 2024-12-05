@@ -5,11 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import petstore.petstore.criteria.SearchCriteria;
-import petstore.petstore.dtos.sectors.SectorDto;
 import petstore.petstore.entities.Animal;
 import petstore.petstore.entities.AnimalCategory;
 import petstore.petstore.entities.Sector;
-import petstore.petstore.services.SectorService;
 
 import java.util.Collection;
 import java.util.List;

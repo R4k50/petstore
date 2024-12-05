@@ -14,16 +14,13 @@ import org.springframework.transaction.annotation.Transactional;
 import petstore.petstore.dtos.sectors.NewSectorDto;
 import petstore.petstore.dtos.sectors.PatchSectorDto;
 import petstore.petstore.dtos.sectors.SectorDto;
-import petstore.petstore.entities.Animal;
 import petstore.petstore.entities.Sector;
 import petstore.petstore.enums.SearchOperation;
 import petstore.petstore.exceptions.AppException;
 import petstore.petstore.mappers.SectorMapper;
-import petstore.petstore.repositories.AnimalRepository;
 import petstore.petstore.repositories.SectorRepository;
 import petstore.petstore.specifications.SectorSpecificationsBuilder;
 
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

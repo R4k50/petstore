@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 import petstore.petstore.animalCategories.AnimalCategoryDto;
 import petstore.petstore.animalCategories.NewAnimalCategoryDto;
 import petstore.petstore.animalCategories.PatchAnimalCategoryDto;
-import petstore.petstore.entities.Animal;
 import petstore.petstore.entities.AnimalCategory;
 import petstore.petstore.exceptions.AppException;
 import lombok.RequiredArgsConstructor;

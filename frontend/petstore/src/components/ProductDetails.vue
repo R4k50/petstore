@@ -11,8 +11,9 @@
             <h1>{{ product.name }}</h1>
             <p>{{ product.description }}</p>
             <h2><strong>{{ product.price }} PLN</strong></h2>
+            <ProductCategoryTags :categories="product.categories" />
+            </div>
             <p :class="quantityClass">{{ quantityMessage }}</p>
-          </div>
         </div>
       </div>
     </div>
@@ -23,6 +24,7 @@
 import { ref, watch, onMounted, computed } from 'vue';
 import axios from 'axios';
 import { Icon } from '@iconify/vue';
+import ProductCategoryTags from '@/components/ProductCategoryTags.vue';
 
 const props = defineProps(['productId']);
 const product = ref({});
@@ -43,6 +45,9 @@ const fetchProduct = async (id) => {
 };
 
 const getImageUrl = (imageName) => {
+  if (!imageName) {
+    return null;
+  }
   return `api/image/${imageName}`;
 };
 
@@ -96,6 +101,7 @@ h2 {
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 999;
 }
 
 .modal-content {

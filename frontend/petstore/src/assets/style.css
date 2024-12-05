@@ -36,12 +36,6 @@ main {
     box-shadow: 0 0 0 0.2rem rgba(103, 194, 58, 0.5);
 }
 
-.el-pagination {
-    display: flex;
-    justify-content: center;
-    margin-top: 1em;
-}
-
 .close:hover {
     color: #56A72B;
 }
@@ -56,3 +50,52 @@ main {
 .el-input__inner {
     font-family: Quicksand;
 }
+
+.el-button--danger {
+    background-color: #f56c6c;
+    border-color: #f56c6c;
+    color: white;
+}
+
+.el-button--danger:hover {
+    background-color: #f44336;
+    border-color: #f44336;
+}
+
+.el-button--danger:focus {
+    box-shadow: 0 0 0 0.2rem rgba(245, 108, 108, 0.5);
+}
+
+.el-button--warning {
+    background-color: #409EFF;
+    border-color: #409EFF;
+    color: white;
+}
+
+.el-button--warning:hover {
+    background-color: #66b1ff;
+    border-color: #66b1ff;
+}
+
+.el-button--warning:focus {
+    box-shadow: 0 0 0 0.2rem rgba(64, 158, 255, 0.5);
+}
+
+.el-button--info {
+    background-color: #909399;
+    border-color: #909399;
+    color: white;
+}
+
+.el-button--info:hover {
+    background-color: #b0b4b7;
+    border-color: #b0b4b7;
+}
+
+.el-button--info:focus {
+    box-shadow: 0 0 0 0.2rem rgba(144, 147, 153, 0.5);
+}
+
+body.modal-open {
+    overflow: hidden;
+  }

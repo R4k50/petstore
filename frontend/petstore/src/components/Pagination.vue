@@ -38,3 +38,12 @@ const handlePageChange = (page) => {
   emit('page-change', page);
 };
 </script>
+
+<style scoped>
+.el-pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 1em;
+    margin-bottom: 2em;
+}
+</style>

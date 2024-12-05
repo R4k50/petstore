@@ -1,6 +1,7 @@
 <template>
   <div class="center">
     <h1>Produkty</h1>
+    <h4>Nasz sklep oferuje szeroki asortyment produktów dla Twoich pupili. Dostępne do kupienia stacjonarnie.</h4>
 
     <ProductFilter @updateFilters="updateFilters" :categories="categories" />
 
@@ -8,7 +9,7 @@
     <div v-else-if="error">{{ error }}</div>
 
     <div v-else-if="products.length === 0">
-      <el-empty description="Brak produktów spełniających kryteria wyszukiwania." />
+      <el-empty description="Brak produktów spełniających kryteria wyszukiwania" />
     </div>
 
     <div v-else class="product-list">
@@ -41,7 +42,7 @@ const products = ref([]);
 const loading = ref(true);
 const error = ref(null);
 const currentPage = ref(1);
-const itemsPerPage = ref(8);
+const itemsPerPage = ref(12);
 const totalElements = ref(0);
 
 const showModal = ref(false);
@@ -63,7 +64,7 @@ const filters = ref({
   minPrice: null,
   maxPrice: null,
   sortByPrice: null,
-  categories: [], // New field for selected categories
+  categories: [],
 });
 
 const buildSearchQuery = () => {
@@ -152,6 +153,13 @@ onMounted(() => fetchData(currentPage.value));
 h1 {
   font-size: 2em;
   color: #333;
+}
+
+h4 {
+  font-family: Quicksand;
+  font-weight: 500;
+  margin-bottom: 30px;
+  color: rgb(59, 59, 59);
 }
 
 .center {

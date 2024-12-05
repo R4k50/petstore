@@ -23,8 +23,8 @@
   });
   
   const categoryColors = {
-    1: 'primary', // zabawki
-    2: 'success', // akcesoria
+    1: 'info', // zabawki
+    2: 'danger', // akcesoria
     3: 'info',    // higiena
     4: 'warning', // jedzenie
     5: 'danger',  // psy

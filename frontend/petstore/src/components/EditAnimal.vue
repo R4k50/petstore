@@ -21,7 +21,7 @@
         <el-form-item label="Kategorie" prop="categories" :error="error?.categories"
           :show-message="error?.categories ? true : false">
           <el-select v-model="form.categories" multiple placeholder="Wybierz kategorie" value-key="id"
-            class="create-product-input" collapse-tags>
+            class="create-product-input">
             <el-option v-for="category in categories" :key="category.id" :label="category.name" :value="category.id" />
           </el-select>
         </el-form-item>

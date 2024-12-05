@@ -1,6 +1,6 @@
 <template>
   <div>
-    <AdminProductFilter @updateFilters="updateFilters" :categories="categories" />
+    <AdminProductFilter @updateFilters="updateFilters" :categories="categories"/>
 
     <div v-if="loading">Ładowanie danych...</div>
     <div v-else-if="error">{{ error }}</div>
@@ -16,12 +16,12 @@
             <img :src="getImageUrl(row.img)" alt="Product Image" class="thumbnail" />
           </template>
         </el-table-column>
-        <el-table-column prop="name" label="Nazwa"></el-table-column>
+        <el-table-column prop="name" label="Nazwa" sortable></el-table-column>
         <el-table-column prop="price" label="Cena" sortable></el-table-column>
         <el-table-column prop="quantity" label="Ilość" sortable></el-table-column>
         <el-table-column label="Kategorie">
           <template #default="{ row }">
-            {{ row.categories.map(category => category.name).join(', ') }}
+            {{ row.categories.map(category => category.name).join(', ') || 'Brak kategorii' }}
           </template>
         </el-table-column>
         <el-table-column label="Akcje" width="200">
@@ -77,16 +77,7 @@ const currentPage = ref(1);
 const itemsPerPage = ref(15);
 const totalPages = ref(0);
 const totalElements = ref(0);
-const categories = ref([
-  { id: 1, name: 'Zabawki' },
-  { id: 2, name: 'Akcesoria' },
-  { id: 3, name: 'Higiena' },
-  { id: 4, name: 'Jedzenie' },
-  { id: 5, name: 'Psy' },
-  { id: 6, name: 'Koty' },
-  { id: 7, name: 'Ptaki' },
-  { id: 8, name: 'Gryzonie' },
-]);
+const categories = ref([]);
 
 const filters = ref({
   name: '',
@@ -132,11 +123,26 @@ const buildSearchQuery = () => {
   return queries.join(',');
 };
 
-const currentSort = ref({ field: 'id', order: 'asc' });
+const currentSort = ref({ field: 'id', order: 'ascending' });
 
 const handleSortChange = ({ prop, order }) => {
   currentSort.value = { field: prop, order };
   fetchData(currentPage.value);
+};
+
+const fetchCategories = async () => {
+  try {
+    const response = await axios.get('/api/product-categories', {
+      params: { size: 9999 },
+    });
+    categories.value = response.data.content || [];
+  } catch (error) {
+    ElNotification.error({
+      title: 'Błąd',
+      message: 'Nie udało się załadować kategorii. Spróbuj ponownie.',
+    });
+    categories.value = [];
+  }
 };
 
 const fetchData = async (page) => {
@@ -217,7 +223,11 @@ const resetDialog = () => {
   productIdToDelete.value = null;
 };
 
-onMounted(() => fetchData(currentPage.value));
+onMounted(() => {
+  fetchCategories();
+  fetchData(currentPage.value);
+});
+
 </script>
 
 <style scoped>

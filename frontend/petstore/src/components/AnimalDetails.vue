@@ -10,7 +10,7 @@
           <div v-else>
             <h1>{{ animal.name }}</h1>
             <AnimalCategoryTags :categories="animal.categories" />
-            <h2><strong>{{ animal.price }} PLN</strong></h2>
+            <h2><strong>{{ animal.price.toFixed(2) }} PLN</strong></h2>
             </div>
         </div>
       </div>

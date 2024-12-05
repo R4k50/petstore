@@ -14,7 +14,7 @@
           </el-input>
         </div>
         <div class="filter-item">
-          <el-button type="primary" @click="clearFilters" class="clear-button">Wyczyść filtrowanie</el-button>
+          <el-button type="primary" @click="clearFilters" class="clear-button">Wyczyść filtrowanie <Icon icon="ic:round-clear" style="margin-left: 5px; font-size: large;"/></el-button>
         </div>
       </div>
 
@@ -164,7 +164,7 @@ const formatPriceTooltip = (value) => `${value} zł`;
 .filter-container {
   max-width: 85%;
   margin: 0 auto 20px;
-  margin-bottom: -10px;
+  margin-bottom: 10px;
   text-align: left;
   background-color: #f4f4f4;
 }
@@ -257,7 +257,7 @@ const formatPriceTooltip = (value) => `${value} zł`;
 }
 
 .clear-button {
-  max-width: 150px;
+  max-width: 180px;
   align-self: left;
   margin-top: 24px;
 }

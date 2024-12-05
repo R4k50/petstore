@@ -2,6 +2,7 @@
     <div class="product-container">
       <img :src="getImageUrl(animal.img)" alt="Product Image" />
       <div class="product-name">{{ animal.name }}</div>
+      <div class="product-price">{{ animal.price.toFixed(2) }} PLN</div>
     </div>    
   </template>
   

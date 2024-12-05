@@ -21,7 +21,7 @@
                     <img :src="getImageUrl(row.img)" alt="Animal Image" class="thumbnail" />
                   </template>
                 </el-table-column>
-                <el-table-column prop="name" label="Nazwa"></el-table-column>
+                <el-table-column prop="name" label="Nazwa" sortable></el-table-column>
                 <el-table-column prop="price" label="Cena" sortable></el-table-column>
                 <el-table-column prop="quantity" label="Ilość" sortable></el-table-column>
                 <el-table-column label="Kategorie">
@@ -49,13 +49,18 @@
                     </div>
                   </template>
                 </el-table-column>
+                <div class="modal-content" v-if="editSectorDialogVisible" title="Edytuj sektor">
+                  <EditSector :sectorId="sectorToEdit" @close="editSectorDialogVisible = false"
+                    @refresh="fetchData(currentPage)" />
+                </div>
+
               </el-table>
             </div>
           </template>
         </el-table-column>
 
         <el-table-column prop="id" label="ID" width="80" sortable></el-table-column>
-        <el-table-column prop="name" label="Nazwa sektora"></el-table-column>
+        <el-table-column prop="name" label="Nazwa sektora" sortable></el-table-column>
         <el-table-column prop="description" label="Opis">
           <template #default="{ row }">
             {{ row.description || 'Brak opisu' }}
@@ -63,23 +68,37 @@
         </el-table-column>
         <el-table-column prop="lastCare" label="Ostatnio oporządzone" sortable>
           <template #default="{ row }">
-            {{ row.lastCare!=null ? (row.lastCare) : 'Puste' }}
+            {{ row.lastCare != null ? (row.lastCare) : 'Puste' }}
           </template>
         </el-table-column>
         <el-table-column prop="lastFeed" label="Ostatnio nakarmione" sortable>
           <template #default="{ row }">
-            {{ row.lastFeed!=null ? (row.lastFeed) : 'Puste' }}
+            {{ row.lastFeed != null ? (row.lastFeed) : 'Puste' }}
           </template>
         </el-table-column>
         <el-table-column label="Akcje" width="300">
           <template #default="{ row }">
             <div class="actions">
-              <el-button type="warning" @click="updateLastCare(row)" style="margin-right: -5px;"> Umyte
-              </el-button>
-              <el-button type="info" @click="updateLastFeed(row)" style="margin-right: 5px;"> Nakarmione
-              </el-button>
-              <el-button type="danger" :icon="Delete" circle @click="deleteSector(row.id)" style="margin-left: 1px;">
-              </el-button>
+              <el-popconfirm title="Czy na pewno chcesz zaktualizować status 'Umyte'?" @confirm="updateLastCare(row)"
+                confirm-button-text="Tak" cancel-button-text="Nie" icon="el-icon-question" icon-color="red">
+                <template #reference>
+                  <el-button type="warning" style="margin-right: -5px;"> Umyte </el-button>
+                </template>
+              </el-popconfirm>
+
+              <el-popconfirm title="Czy na pewno chcesz zaktualizować status 'Nakarmione'?"
+                @confirm="updateLastFeed(row)" confirm-button-text="Tak" cancel-button-text="Nie"
+                icon="el-icon-question" icon-color="blue">
+                <template #reference>
+                  <el-button type="info" style="margin-right: -5px;"> Nakarmione </el-button>
+                </template>
+              </el-popconfirm>
+
+              <el-button type="warning" :icon="Edit" circle @click="openEditSectorDialog(row.id)"
+                style="margin-right: 5px;"></el-button>
+
+              <el-button type="danger" :icon="Delete" circle @click="deleteSector(row.id)"
+                style="margin-left: 1px;"></el-button>
             </div>
           </template>
         </el-table-column>
@@ -88,6 +107,11 @@
 
     <Pagination :totalElements="totalElements" :itemsPerPage="itemsPerPage" :currentPage="currentPage"
       @page-change="goToPage" />
+
+    <div class="modal-content" v-if="editSectorDialogVisible" title="Edytuj sektor" >
+      <EditSector :sectorId="sectorToEdit" @close="editSectorDialogVisible = false" @refresh="fetchData(currentPage)" />
+    </div>
+
 
     <div v-if="confirmDeleteAnimalModalVisible" class="modal-overlay" @click="resetAnimalDialog">
       <div class="modal-content" @click.stop>
@@ -125,6 +149,7 @@ import Pagination from '@/components/Pagination.vue';
 import { ElNotification } from 'element-plus';
 import { Edit, Delete } from '@element-plus/icons-vue';
 import EditAnimal from './EditAnimal.vue';
+import EditSector from './EditSector.vue';
 
 const confirmDeleteAnimalModalVisible = ref(false);
 const confirmDeleteModalVisible = ref(false);
@@ -147,6 +172,14 @@ const filters = ref({
 });
 
 const animalsBySector = ref({});
+
+const editSectorDialogVisible = ref(false);
+const sectorToEdit = ref(null);
+
+const openEditSectorDialog = (id) => {
+  sectorToEdit.value = id;
+  editSectorDialogVisible.value = true;
+};
 
 const formatDate = (timestamp) => {
   if (!timestamp) return '-';
@@ -209,8 +242,8 @@ const fetchData = async (page) => {
     const sectorData = response.data.content.map(sector => ({
       ...sector,
       animals: [],
-      lastCare: sector.lastCare!=null ?  formatDate(sector.lastCare) : null,
-      lastFeed: sector.lastFeed!=null ? formatDate(sector.lastFeed) : null,
+      lastCare: sector.lastCare != null ? formatDate(sector.lastCare) : null,
+      lastFeed: sector.lastFeed != null ? formatDate(sector.lastFeed) : null,
     }));
 
     const animalsPromises = sectorData.map(sector =>
@@ -311,7 +344,7 @@ const confirmDeleteSector = async () => {
 const confirmDeleteAnimal = async () => {
   try {
     await axios.delete(`/api/animal/${animalIdToDelete.value}`);
-    
+
     const sectorName = Object.keys(animalsBySector.value).find(name =>
       animalsBySector.value[name].some(animal => animal.id === animalIdToDelete.value)
     );
@@ -349,11 +382,13 @@ const deleteAnimal = (animalId) => {
 const resetDialog = () => {
   confirmDeleteModalVisible.value = false;
   sectorIdToDelete.value = null;
+  editSectorDialogVisible.value = false;
 };
 
 const resetAnimalDialog = () => {
   confirmDeleteAnimalModalVisible.value = false;
   animalIdToDelete.value = null;
+  fetchData(currentPage)
 };
 
 onMounted(() => fetchData(currentPage.value));

@@ -15,16 +15,14 @@
     <div v-else class="product-list">
       <div class="product-item" v-for="product in products" :key="product.id">
         <Product :product="product" />
-        <el-button type="primary" @click="openModal(product.id)">Zobacz szczegóły</el-button>
+        <el-button type="primary" @click="openModal(product.id)">Zobacz szczegóły
+          <Icon icon="heroicons-solid:external-link" style="margin-left:5px" />
+        </el-button>
       </div>
     </div>
 
-    <Pagination 
-      :totalElements="totalElements" 
-      :itemsPerPage="itemsPerPage" 
-      :currentPage="currentPage" 
-      @page-change="goToPage" 
-    />
+    <Pagination :totalElements="totalElements" :itemsPerPage="itemsPerPage" :currentPage="currentPage"
+      @page-change="goToPage" />
 
     <ProductDetails v-if="showModal" :productId="selectedProductId" @close="closeModal" />
   </div>
@@ -37,6 +35,7 @@ import ProductDetails from '@/components/ProductDetails.vue';
 import Product from '@/components/Product.vue';
 import ProductFilter from '@/components/ProductFilter.vue';
 import Pagination from '@/components/Pagination.vue';
+import { Icon } from '@iconify/vue';
 
 const products = ref([]);
 const loading = ref(true);
@@ -47,16 +46,7 @@ const totalElements = ref(0);
 
 const showModal = ref(false);
 const selectedProductId = ref(null);
-const categories = ref([
-  { id: 1, name: 'Zabawki' },
-  { id: 2, name: 'Akcesoria' },
-  { id: 3, name: 'Higiena' },
-  { id: 4, name: 'Jedzenie' },
-  { id: 5, name: 'Psy' },
-  { id: 6, name: 'Koty' },
-  { id: 7, name: 'Ptaki' },
-  { id: 8, name: 'Gryzonie' },
-]);
+const categories = ref([]);
 
 const filters = ref({
   name: '',
@@ -79,7 +69,7 @@ const buildSearchQuery = () => {
   if (filters.value.maxPrice !== null) {
     queries.push(`price<${filters.value.maxPrice}`);
   }
-  if (filters.value.maxQuantity !== null || filters.value.minQuantity !== null) {
+  if (filters.value.maxQuantity !== null) {
     if (filters.value.maxQuantity === 0) {
       queries.push(`quantity:0`);
     } else if (filters.value.maxQuantity === 10) {
@@ -97,14 +87,29 @@ const buildSearchQuery = () => {
   return queries.join(',');
 };
 
+const fetchCategories = async () => {
+  try {
+    const response = await axios.get('/api/product-categories', {
+      params: { size: 9999 },
+    });
+    categories.value = response.data.content || [];
+  } catch (error) {
+    ElNotification.error({
+      title: 'Błąd',
+      message: 'Nie udało się załadować kategorii. Spróbuj ponownie.',
+    });
+    categories.value = [];
+  }
+};
+
 const fetchData = async (page) => {
   try {
     loading.value = true;
     const searchQuery = buildSearchQuery();
 
-    const sortOrder = filters.value.sortByPrice === 'priceAsc' ? 'price,asc' : 
-                      filters.value.sortByPrice === 'priceDesc' ? 'price,desc' : 
-                      'id,asc';
+    const sortOrder = filters.value.sortByPrice === 'priceAsc' ? 'price,asc' :
+      filters.value.sortByPrice === 'priceDesc' ? 'price,desc' :
+        'id,asc';
 
     const response = await axios.get('/api/products', {
       params: {
@@ -146,7 +151,11 @@ const goToPage = (page) => {
   fetchData(currentPage.value);
 };
 
-onMounted(() => fetchData(currentPage.value));
+onMounted(() => {
+  fetchCategories();
+  fetchData(currentPage.value);
+});
+
 </script>
 
 <style scoped>
@@ -171,19 +180,19 @@ h4 {
 
 .product-list {
   display: flex;
-  flex-wrap: wrap; 
-  justify-content: center; 
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .product-item {
   border: 1px solid #dcdfe6;
   padding: 20px;
   border-radius: 8px;
-  width: 20%; 
+  width: 20%;
   margin: 10px;
   text-align: center;
-  box-sizing: border-box; 
-  height: 300px; 
+  box-sizing: border-box;
+  height: 300px;
 }
 
 .product-item img {

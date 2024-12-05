@@ -21,7 +21,7 @@
         <el-form-item label="Kategorie" prop="categories" :error="error?.categories"
           :show-message="error?.categories ? true : false">
           <el-select v-model="animal.categories" multiple placeholder="Wybierz kategorie" value-key="id"
-            class="create-product-input" collapse-tags>
+            class="create-product-input">
             <el-option v-for="category in categories" :key="category.id" :label="category.name" :value="category" />
           </el-select>
         </el-form-item>
@@ -158,10 +158,7 @@ onMounted(() => {
         });
 
         emit('close');
-
-        setTimeout(() => {
-            window.location.reload();
-        }, 1000);
+        window.location.reload();
     } catch (err) {
         if (err.response && err.response.data && err.response.data.errors) {
             error.value = err.response.data.errors;

@@ -10,8 +10,8 @@
           <div v-else>
             <h1>{{ product.name }}</h1>
             <p>{{ product.description }}</p>
-            <h2><strong>{{ product.price }} PLN</strong></h2>
             <ProductCategoryTags :categories="product.categories" />
+            <h2 style="margin-bottom: -10px"><strong>{{ product.price.toFixed(2) }} PLN</strong></h2>
             </div>
             <p :class="quantityClass">{{ quantityMessage }}</p>
         </div>

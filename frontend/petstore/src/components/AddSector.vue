@@ -35,20 +35,12 @@ const emit = defineEmits();
 const error = ref({});
 const sector = reactive({
     name: '',
-    description: '',
-    animals: [],
+    description: ''
 });
 
 const submitSector = async () => {
     try {
         error.value = {};
-        const animalsToSend = sector.animals.map(animal => ({ id: animal.id }));
-
-        const sectorToSend = {
-            ...sector,
-            animals: animalsToSend,
-        };
-
         await axios.post('http://127.0.0.1:8000/sector', sectorToSend);
 
         ElNotification.success({
@@ -77,7 +69,6 @@ const submitSector = async () => {
 const closeDialog = () => {
     sector.name = '';
     sector.description = '';
-    sector.animals = [];
     error.value = {};
     emit('close');
 };

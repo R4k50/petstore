@@ -1,200 +1,201 @@
 <template>
-    <el-card class="filter-container" shadow="never">
-      <div class="filters">
-        <div class="filter-row">
-          <div class="filter-item">
-            <label class="filter-label">Nazwa</label>
-            <el-input v-model="filters.name" placeholder="Wpisz nazwę" clearable @clear="applyFilters"
-              @input="applyFilters" class="name-filter">
-              <template #append>
-                <el-button @click="searchByName" style="width: 50px; height: 36px; padding: 0;">
-                  <Icon icon="mdi:search" class="search-icon" />
-                </el-button>
-              </template>
-            </el-input>
-          </div>
-          <div class="filter-item">
-            <el-button type="primary" @click="clearFilters" class="clear-button">Wyczyść filtrowanie <Icon icon="ic:round-clear" style="margin-left: 5px; font-size: large;"/></el-button>
-          </div>
+  <el-card class="filter-container" shadow="never">
+    <div class="filters">
+      <div class="filter-row">
+        <div class="filter-item">
+          <label class="filter-label">Nazwa</label>
+          <el-input v-model="filters.name" placeholder="Wpisz nazwę" clearable @clear="applyFilters"
+            @input="applyFilters" class="name-filter">
+            <template #append>
+              <el-button @click="searchByName" style="width: 50px; height: 36px; padding: 0;">
+                <Icon icon="mdi:search" class="search-icon" />
+              </el-button>
+            </template>
+          </el-input>
         </div>
+        <div class="filter-item">
+          <el-button type="primary" @click="clearFilters" class="clear-button">Wyczyść filtrowanie
+            <Icon icon="ic:round-clear" style="margin-left: 5px; font-size: large;" />
+          </el-button>
         </div>
-    </el-card>
-  </template>
-  
-  <script setup>
-  import { ref } from 'vue';
-  import { ArrowUp, ArrowDown } from '@element-plus/icons-vue';
-  import { Icon } from '@iconify/vue';
-  
-  const props = defineProps({
-    categories: {
-      type: Array,
-      default: () => [],
-    },
-  });
-  
-  const filters = ref({
-    name: ''
-  });
-  
-  const emit = defineEmits(['updateFilters']);
-  
-  const applyFilters = () => {
-    emit('updateFilters', filters.value);
-  };
-  
-  const clearFilters = () => {
-    filters.value = { name: ''};
-    applyFilters();
-  };
-  </script>
-  
-  <style scoped>
-  .filter-container {
-    max-width: 85%;
-    margin: 0 auto 20px;
-    margin-bottom: -10px;
-    text-align: left;
-    background-color: #f4f4f4;
-  }
+      </div>
+    </div>
+  </el-card>
+</template>
 
-  .filters {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    justify-content: center;
-  }
+<script setup>
+import { ref } from 'vue';
+import { ArrowUp, ArrowDown } from '@element-plus/icons-vue';
+import { Icon } from '@iconify/vue';
 
-  .filter-row {
-    display: flex;
-    gap: 20px;
-    width: 100%;
-    flex-wrap: wrap;
-  }
+const props = defineProps({
+  categories: {
+    type: Array,
+    default: () => [],
+  },
+});
 
-  .filter-item {
-    display: flex;
-    flex-direction: column;
-    align-items: left;
-    width: 100%;
-    max-width: 250px;
-  }
+const filters = ref({
+  name: ''
+});
 
-  .filter-price-item {
-    display: flex;
-    flex-direction: column;
-    align-items: left;
-    width: 100%;
-    max-width: 600px;
-  }
+const emit = defineEmits(['updateFilters']);
 
-  .filter-row:first-child .filter-item {
-    max-width: calc(50% - 10px);
-  }
+const applyFilters = () => {
+  emit('updateFilters', filters.value);
+};
 
-  .filter-row:nth-child(2) .filter-item {
-    max-width: calc(100% - 25px);
-  }
+const clearFilters = () => {
+  filters.value = { name: '' };
+  applyFilters();
+};
+</script>
 
-  .filter-row:nth-child(3) .filter-item {
-    max-width: 100%;
-  }
+<style scoped>
+.filter-container {
+  max-width: 85%;
+  margin: 0 auto 20px;
+  margin-bottom: -10px;
+  text-align: left;
+  background-color: #f4f4f4;
+}
 
-  .filter-row:nth-child(4) .filter-item {
-    max-width: calc(50% - 10px);
-  }
+.filters {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  justify-content: center;
+}
 
-  .filter-row:nth-child(5) .filter-item {
-    max-width: 100%;
-  }
+.filter-row {
+  display: flex;
+  gap: 20px;
+  width: 100%;
+  flex-wrap: wrap;
+}
 
-  .filter-label {
-    font-size: 12px;
-    font-weight: normal;
-    margin-bottom: 8px;
-    color: #666;
-    text-align: left;
-  }
+.filter-item {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  width: 100%;
+  max-width: 250px;
+}
 
-  .filter-header {
-    font-size: 16px;
-    font-weight: bold;
-    margin-bottom: -5px;
-  }
+.filter-price-item {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  width: 100%;
+  max-width: 600px;
+}
 
-  .name-filter ::placeholder {
-    font-family: Quicksand !important;
-    font-weight: 500;
-  }
+.filter-row:first-child .filter-item {
+  max-width: calc(50% - 10px);
+}
 
-  .name-filter input::placeholder,
-  .quantity-select,
-  .sort-select,
-  .category-select {
-    width: 100%;
-    font-family: Quicksand;
-    font-weight: 500;
-  }
+.filter-row:nth-child(2) .filter-item {
+  max-width: calc(100% - 25px);
+}
 
-  .price-slider {
-    width: 100%;
-    margin-left: 10px;
-  }
+.filter-row:nth-child(3) .filter-item {
+  max-width: 100%;
+}
 
-  .sort-icon {
-    margin-right: 8px;
-  }
+.filter-row:nth-child(4) .filter-item {
+  max-width: calc(50% - 10px);
+}
 
-  .clear-button {
-    max-width: 180px;
-    align-self: left;
-    margin-top: 24px;
-  }
+.filter-row:nth-child(5) .filter-item {
+  max-width: 100%;
+}
 
-  .el-divider {
-    margin-top: 25px;
-    margin-bottom: -8px;
-  }
+.filter-label {
+  font-size: 12px;
+  font-weight: normal;
+  margin-bottom: 8px;
+  color: #666;
+  text-align: left;
+}
 
-  .search-icon {
-    font-size: 18px;
-  }
+.filter-header {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: -5px;
+}
 
-  .sort-row {
-    display: flex;
-    justify-content: flex-end;
-    width: 100%;
-    gap: 20px;
-  }
+.name-filter ::placeholder {
+  font-family: Quicksand !important;
+  font-weight: 500;
+}
 
-  .price-input ::placeholder {
-    width: 80px;
-    font-family: Quicksand;
-    font-weight: 500;
-  }
+.name-filter input::placeholder,
+.quantity-select,
+.sort-select,
+.category-select {
+  width: 100%;
+  font-family: Quicksand;
+  font-weight: 500;
+}
 
-  .price-container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 20px;
-  }
+.price-slider {
+  width: 100%;
+  margin-left: 10px;
+}
 
-  .price-input-group {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    width: 60px;
-  }
+.sort-icon {
+  margin-right: 8px;
+}
 
-  .price-label {
-    font-size: 12px;
-    color: #757575;
-  }
+.clear-button {
+  max-width: 180px;
+  align-self: left;
+  margin-top: 24px;
+}
 
-  .price-slider {
-    flex-grow: 1;
-    width: 300px;
-  }
+.el-divider {
+  margin-top: 25px;
+  margin-bottom: -8px;
+}
+
+.search-icon {
+  font-size: 18px;
+}
+
+.sort-row {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  gap: 20px;
+}
+
+.price-input ::placeholder {
+  width: 80px;
+  font-family: Quicksand;
+  font-weight: 500;
+}
+
+.price-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.price-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 60px;
+}
+
+.price-label {
+  font-size: 12px;
+  color: #757575;
+}
+
+.price-slider {
+  flex-grow: 1;
+  width: 300px;
+}
 </style>
-  

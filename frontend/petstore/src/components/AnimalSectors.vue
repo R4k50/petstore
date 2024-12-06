@@ -26,7 +26,7 @@
                 <el-table-column prop="quantity" label="Ilość" sortable></el-table-column>
                 <el-table-column label="Kategorie">
                   <template #default="{ row }">
-                    {{ row.categories.map(category => category.name).join(', ') }}
+                    {{ row.categories.map(category => category.name).join(', ') || 'Brak kategorii' }}
                   </template>
                 </el-table-column>
                 <el-table-column label="Sektor">
@@ -367,7 +367,6 @@ const confirmDeleteAnimal = async () => {
     });
   }
 };
-
 
 const openEditDialog = (id) => {
   animalToEdit.value = id;
